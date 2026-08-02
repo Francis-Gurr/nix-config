@@ -1,0 +1,29 @@
+{
+  "theme": "auto",
+  "effortLevel": "high",
+  "model": "opus",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "ExitPlanMode",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -d \"$HOME/Documents/francis-notes/francis\" ] || exit 0; printf \"%s\\n\" \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PostToolUse\\\",\\\"additionalContext\\\":\\\"The plan was just approved. Offer to save it to the Obsidian vault using the obsidian-plan skill: it belongs on an existing task or workstream as status draft or todo, never as a separate plan note. Apply the sizing rule first - trivial work does not warrant a note.\\\"}}\""
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "f=$(jq -r \".tool_input.file_path // \\\"\\\"\"); case \"$f\" in */memory/*) [ \"${f##*/}\" = \"MEMORY.md\" ] || printf \"%s\" '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"About to write auto-memory. Decide where this belongs before writing. Anything that should hold on every machine - working preferences, conventions, workflow rules - belongs in the chezmoi source at ~/.local/share/chezmoi/dot_config/agent/ followed by chezmoi apply: AGENTS.md for general preferences, an existing skill when it qualifies that skill behaviour, or a new skill for a distinct workflow. Auto-memory is machine-local and will not reach another workstation. Keep it here only when it is specific to this project on this machine. State which you chose.\"}}';; esac"
+          }
+        ]
+      }
+    ]
+  }
+}

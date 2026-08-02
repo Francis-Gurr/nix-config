@@ -1,6 +1,7 @@
 { ... }:
 {
   imports = [
+    ./agent.nix
     ./git.nix
     ./kitty.nix
     ./neovim.nix
