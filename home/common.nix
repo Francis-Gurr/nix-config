@@ -1,5 +1,10 @@
 { pkgs, ... }:
 {
+  imports = [
+    ./shell.nix
+    ./starship.nix
+  ];
+
   home = {
     username = "francis";
     stateVersion = "26.05";
