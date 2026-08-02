@@ -38,7 +38,7 @@ The two copies diverge until every machine has moved to Nix; port changes across
 
 ## Notes & plans
 
-My personal Obsidian vault is `~/Documents/francis-notes/francis`.
+My personal Obsidian vault is `~/obsidian-vaults/personal`.
 
 - Reading or writing any note: use the `obsidian-notes` skill.
 - Finding or creating a project, workstream or task, or updating status: use the `obsidian-project`

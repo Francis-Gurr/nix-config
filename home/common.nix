@@ -5,6 +5,7 @@
     ./git.nix
     ./kitty.nix
     ./neovim.nix
+    ./obsidian.nix
     ./packages.nix
     ./shell.nix
     ./starship.nix

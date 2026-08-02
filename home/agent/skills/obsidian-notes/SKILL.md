@@ -3,9 +3,9 @@ name: obsidian-notes
 description: Use when reading or writing notes in my personal Obsidian vault — folder structure, frontmatter, note shape, naming, and Obsidian-flavoured Markdown. Read by the obsidian-project and obsidian-plan skills.
 ---
 
-Vault is `~/Documents/francis-notes/francis`. **If it does not exist, say so and stop** — do not
+Vault is `~/obsidian-vaults/personal`. **If it does not exist, say so and stop** — do not
 create it. It is absent on work machines, and a fake vault produces notes that never sync. The
-shared vault (`~/Documents/shared-notes/shared-notes`) is out of scope.
+shared vault (`~/obsidian-vaults/shared`) is out of scope.
 
 Write notes with the `caveman` skill: tight prose, no filler.
 
@@ -136,12 +136,12 @@ operation goes through it; an external `mv` reads as delete-plus-create and sile
 link.
 
 ```
-obsidian vault="francis" rename file=<name> name=<new>
-obsidian vault="francis" move   file=<name> to=<path>
-obsidian vault="francis" delete file=<name>
+obsidian vault="personal" rename file=<name> name=<new>
+obsidian vault="personal" move   file=<name> to=<path>
+obsidian vault="personal" delete file=<name>
 ```
 
-`vault="francis"` is **mandatory** — both vaults are open at once, and without it a rename can hit
+`vault="personal"` is **mandatory** — both vaults are open at once, and without it a rename can hit
 the shared one. Never `mv` or `rm` a note. If the CLI is unavailable, say what needs renaming and
 leave it; a deferred rename beats silently broken links.
 
