@@ -2,6 +2,7 @@
 {
   imports = [
     ./git.nix
+    ./kitty.nix
     ./packages.nix
     ./shell.nix
     ./starship.nix
