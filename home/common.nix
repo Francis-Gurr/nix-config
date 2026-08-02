@@ -3,6 +3,7 @@
   imports = [
     ./git.nix
     ./kitty.nix
+    ./neovim.nix
     ./packages.nix
     ./shell.nix
     ./starship.nix
