@@ -87,10 +87,12 @@
 
           # Same delta as the terminal, minus its pager — lazygit scrolls itself.
           # Everything else is inherited from the [delta] section in git config.
-          paging = {
-            colorArg = "always";
-            pager = "${lib.getExe config.programs.delta.finalPackage} --paging=never";
-          };
+          pagers = [
+            {
+              colorArg = "always";
+              pager = "${lib.getExe config.programs.delta.finalPackage} --paging=never";
+            }
+          ];
         };
 
         keybinding.universal = {
