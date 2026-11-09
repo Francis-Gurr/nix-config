@@ -25,10 +25,7 @@
       ...
     }@inputs:
     let
-      forEachSystem = nixpkgs.lib.genAttrs [
-        "x86_64-linux"
-        "aarch64-darwin"
-      ];
+      forEachSystem = nixpkgs.lib.genAttrs [ "x86_64-linux" ];
 
       mkHome =
         system: module:

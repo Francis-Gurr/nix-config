@@ -1,15 +1,15 @@
 # nix-config
 
-Declarative, cross-platform user environment built on standalone [Home Manager](https://github.com/nix-community/home-manager). One config for a Fedora workstation, an Apple Silicon Mac, and later NixOS.
+Declarative user environment built on standalone [Home Manager](https://github.com/nix-community/home-manager). One config for a Fedora workstation now and NixOS later.
 
-Standalone means Home Manager manages the user environment only. It needs no NixOS, no nix-darwin, and no root once Nix itself is installed — which matters on a locked-down work machine.
+Standalone means Home Manager manages the user environment only. It needs no NixOS and no root once Nix itself is installed.
 
 ## Layout
 
 ```
 flake.nix              inputs, homeConfigurations, checks, devShell
 home/
-  common.nix           shared across platforms; imports everything below
+  common.nix           shared base; imports everything below
   linux.nix            x86_64-linux entry point
   agent.nix            ~/.config/agent and ~/.claude
   git.nix              git, delta, lazygit
@@ -24,17 +24,13 @@ home/
   nvim/                neovim config, symlinked to the working tree
 ```
 
-One file per concern. `common.nix` holds only what every platform shares: `username`, `stateVersion`, and the import list. Per-platform files carry the home directory and anything genuinely OS-specific — `imv` and `wl-clipboard` live in `linux.nix` because nothing Wayland-shaped belongs on a Mac.
+One file per concern. `common.nix` holds only the shared base: `username`, `stateVersion`, and the import list. `linux.nix` carries the home directory and anything OS-specific, such as `imv` and `wl-clipboard`.
 
 ## Set up a new machine
 
 **Clone to exactly `~/dev/nix-config`.** `home/neovim.nix` symlinks `~/.config/nvim` at that path, so any other location leaves neovim without a config. This is the only place the config is not location-independent.
 
 ### 1. Install Nix
-
-Per platform, deliberately: Fedora packages Nix with flakes already enabled, and macOS has no equivalent.
-
-**Fedora:**
 
 ```bash
 sudo dnf install nix
@@ -50,9 +46,7 @@ sudo systemctl enable --now nix-daemon.socket
 
 The service staying `inactive` afterwards is correct — it is socket-activated. Verify with `nix store ping`.
 
-**macOS:** use the [Determinate Systems installer](https://github.com/DeterminateSystems/nix-installer). It enables flakes, handles the APFS volume, works on managed Macs, and uninstalls cleanly. Install the Xcode Command Line Tools too — treesitter compiles parsers and needs a C compiler.
-
-Both need `sudo` once to create `/nix`. Applying the config afterwards never does.
+Installing needs `sudo`. Applying the config afterwards never does.
 
 ### 2. Clone and apply
 
@@ -76,7 +70,7 @@ That only catches paths Home Manager writes to directly. It will not notice a fi
 
 Nix installs tools; it does not log you in.
 
-- `chsh -s $(command -v zsh)` on Linux. macOS already defaults to zsh.
+- `chsh -s $(command -v zsh)`.
 - `gh auth login`, and any other interactive one-time auth.
 - Write `~/.config/git/work.inc` on a work machine, so the work address never enters this repo:
 
