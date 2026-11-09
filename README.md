@@ -1,16 +1,21 @@
 # nix-config
 
-Declarative user environment built on standalone [Home Manager](https://github.com/nix-community/home-manager). One config for a Fedora workstation now and NixOS later.
+Declarative user environment built on [Home Manager](https://github.com/nix-community/home-manager), with a NixOS system layer. Two outputs share `home/linux.nix`:
+
+| Output | Target | Home Manager runs |
+|---|---|---|
+| `homeConfigurations."francis@linux"` | Fedora workstation | standalone |
+| `nixosConfigurations.vm` | NixOS test VM with a Hyprland desktop | as a NixOS module |
 
 Standalone means Home Manager manages the user environment only. It needs no NixOS and no root once Nix itself is installed.
 
 ## Layout
 
 ```
-flake.nix              inputs, homeConfigurations, checks, devShell
+flake.nix              inputs, homeConfigurations, nixosConfigurations, checks, devShell
 home/
-  common.nix           shared base; imports everything below
-  linux.nix            x86_64-linux entry point
+  linux.nix            x86_64-linux entry point; imports common.nix; Hyprland desktop
+  common.nix           shared base; imports the modules below
   agent.nix            ~/.config/agent and ~/.claude
   git.nix              git, delta, lazygit
   kitty.nix            terminal
@@ -22,13 +27,21 @@ home/
   agent/               agent docs and skills, deployed read-only
   claude/              Claude Code settings
   nvim/                neovim config, symlinked to the working tree
+  wallpaper.png        desktop wallpaper
+hosts/
+  common.nix           NixOS base: boot, locale, network, audio, Hyprland, greetd, Steam, user
+  vm/configuration.nix VM host: disk, memory, display
 ```
 
-One file per concern. `common.nix` holds only the shared base: `username`, `stateVersion`, and the import list. `linux.nix` carries the home directory and anything OS-specific, such as `imv` and `wl-clipboard`.
+One file per concern. `common.nix` holds only the shared base: `username`, `stateVersion`, Home Manager itself, and the import list. `linux.nix` carries the home directory and anything OS-specific: the Hyprland session, waybar, the launcher, notifications, the wallpaper, and packages such as `imv` and `wl-clipboard`.
 
-## Set up a new machine
+## Set up Fedora
 
 **Clone to exactly `~/dev/nix-config`.** `home/neovim.nix` symlinks `~/.config/nvim` at that path, so any other location leaves neovim without a config. This is the only place the config is not location-independent.
+
+**Register an SSH key with GitHub first.** The clone below uses SSH, and `home/git.nix` rewrites `https://github.com/` to SSH for every later git fetch.
+
+**The Hyprland session is NixOS-only for now.** `home/linux.nix` sets `package = null`, so Fedora gets the Hyprland config but no Hyprland. The session's user services still install, and `waybar`, `hyprpaper`, `hyprlauncher` and `hyprpolkitagent` are wanted by `graphical-session.target`, so they start under GNOME too.
 
 ### 1. Install Nix
 
@@ -44,7 +57,7 @@ sudo restorecon -RFv /nix/var/nix/daemon-socket
 sudo systemctl enable --now nix-daemon.socket
 ```
 
-The service staying `inactive` afterwards is correct — it is socket-activated. Verify with `nix store ping`.
+The service staying `inactive` afterwards is correct — it is socket-activated. Verify with `nix store info`.
 
 Installing needs `sudo`. Applying the config afterwards never does.
 
@@ -70,23 +83,38 @@ That only catches paths Home Manager writes to directly. It will not notice a fi
 
 Nix installs tools; it does not log you in.
 
-- `chsh -s $(command -v zsh)`.
+- `sudo dnf install zsh && chsh -s /usr/bin/zsh`. `chsh` only accepts shells in `/etc/shells`, which excludes the Nix profile's `zsh`. The system `zsh` still reads the config Home Manager writes.
 - `gh auth login`, and any other interactive one-time auth.
 - Install any app plugins that carry their own credentials. Those settings stay out of this repo, so they cannot be declared here.
 
 Reopen your terminal so the profile lands on `PATH`.
 
+## Run the NixOS VM
+
+```bash
+nix build .#nixosConfigurations.vm.config.system.build.vm
+./result/bin/run-nixos-vm
+```
+
+Log in as `francis` with the password `changeme`. `tuigreet` then starts Hyprland: `SUPER + RETURN` opens kitty and `SUPER + D` opens the launcher. The full bind list is in `home/linux.nix`.
+
+The VM keeps its disk in `./nixos.qcow2`, which is gitignored. Delete that file to start clean. It has no clone of this repo, so `~/.config/nvim` dangles until you clone to `~/dev/nix-config` inside it.
+
+Build `system.build.vmWithBootLoader` instead to boot through a real bootloader. There is no physical NixOS host yet.
+
 ## Day to day
 
-Edit a file under `home/`, then rebuild and activate:
+Edit a file under `home/`, then rebuild and activate. On Fedora:
 
 ```bash
 nix build '.#homeConfigurations."francis@linux".activationPackage' && ./result/activate
 ```
 
+For the VM, rebuild it as above and restart it. Changes under `hosts/` only reach the VM.
+
 Deployed config is read-only, because it lives in the Nix store. Editing `~/.config/agent/AGENTS.md` fails rather than silently doing nothing — the source is `home/agent/AGENTS.md` and the change needs a rebuild.
 
-Two directories are the exception, symlinked to the working tree instead: `home/nvim`, because `vim.pack` writes its lockfile back into its own config directory, and anything else a tool insists on writing. Prefer store copies otherwise.
+`home/nvim` is the one exception, symlinked to the working tree because `vim.pack` writes its lockfile back into its own config directory. Edits there apply without a rebuild. Prefer store copies for anything else, unless a tool insists on writing to its config.
 
 Flakes only see git-tracked files, so `git add` a new file before building it.
 
@@ -94,22 +122,25 @@ Flakes only see git-tracked files, so `git add` a new file before building it.
 
 ```bash
 nix develop     # or just cd in, if direnv is set up
+pnpm install    # once per clone; commit-msg needs commitlint from node_modules
 ```
 
 The shell brings the linters and `pnpm`, and installs the git hooks:
 
 | Stage | Runs |
 |---|---|
-| `pre-commit` | `nixfmt-rfc-style`, `statix`, `deadnix` |
+| `pre-commit` | `nixfmt`, `statix`, `deadnix` |
 | `commit-msg` | `commitlint` |
 | `pre-push` | `nix flake check` |
 
-`nix flake check` is on push rather than commit because it is much heavier than the linters, and committing should stay fast.
+`nix flake check` builds the Home Manager config and evaluates the NixOS one. It is on push rather than commit because it is much heavier than the linters, and committing should stay fast.
 
 Commits follow Conventional Commits with a leading gitmoji, subject line only — `commitlint.config.mjs` is the authority, and the `commit-msg` hook enforces it.
 
 ## Conventions
 
-Each `home/*.nix` file owns one concern and is imported by `common.nix`. Adding a tool means a new file there plus one line in the import list, not a section appended to an existing module.
+Each `home/*.nix` module owns one concern and is imported by `common.nix`, except the `linux.nix` entry point, which imports `common.nix`. Adding a tool means a new file there plus one line in the import list, not a section appended to an existing module.
+
+System-level config shared by NixOS hosts goes in `hosts/common.nix`, and anything specific to one host goes in `hosts/<name>/configuration.nix`.
 
 Config is transcribed into Nix options rather than copied verbatim — `programs.starship.settings` as an attrset, not `readFile` on a TOML file. Typed options catch mistakes at build time and Home Manager handles the ordering constraints, so prefer a module over `home.file` whenever one exists.
