@@ -5,15 +5,6 @@
       enable = true;
       lfs.enable = true;
 
-      # Written by hand per machine, and ignored by git when absent, so a work
-      # address never reaches this repo.
-      includes = [
-        {
-          condition = "gitdir:~/dev/work/";
-          path = "~/.config/git/work.inc";
-        }
-      ];
-
       ignores = [
         ".python-version"
         "**/.claude/settings.local.json"

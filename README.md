@@ -72,14 +72,6 @@ Nix installs tools; it does not log you in.
 
 - `chsh -s $(command -v zsh)`.
 - `gh auth login`, and any other interactive one-time auth.
-- Write `~/.config/git/work.inc` on a work machine, so the work address never enters this repo:
-
-  ```ini
-  [user]
-      email = you@work.example
-  ```
-
-  Git ignores the include when the file is absent, so other machines need nothing.
 - Install any app plugins that carry their own credentials. Those settings stay out of this repo, so they cannot be declared here.
 
 Reopen your terminal so the profile lands on `PATH`.
