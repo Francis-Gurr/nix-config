@@ -17,11 +17,11 @@
         };
 
         alias = {
-          fetch = "! git fetch -p && git for-each-ref --format '%(refname:short) %(upstream:track)' | awk '$2 == \"[gone]\" {print $1}' | xargs -r git branch -D";
           glog = "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'";
           recent = "branch --sort=-committerdate --format=\"%(committerdate:relative)%09%(refname:short)\"";
           rlog = "!git --no-pager log --decorate --pretty=oneline --abbrev-commit --color=always| less -N";
           stash-all = "stash save --include-untracked";
+          tidy = "! git fetch -p && git for-each-ref --format '%(refname:short) %(upstream:track)' | awk '$2 == \"[gone]\" {print $1}' | xargs -r git branch -D";
           undo = "reset --soft HEAD^";
         };
 
