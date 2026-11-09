@@ -6,6 +6,10 @@ let
     diskSize = 40960;
     # The default tmpfs store loses everything built in the VM at shutdown.
     writableStoreUseTmpfs = false;
+    qemu.options = [
+      "-device virtio-vga-gl"
+      "-display gtk,gl=on"
+    ];
   };
 in
 {
