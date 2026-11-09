@@ -7,21 +7,7 @@
 
       command_timeout = 10000;
 
-      format = ''
-        $username\
-        $hostname\
-        $localip\
-        $shlvl\
-        $directory\
-        $git_branch\
-        $git_commit\
-        $git_state\
-        $git_status\
-        $fill\
-        ''${custom.config_branch}\
-        $line_break\
-        $character\
-      '';
+      format = "$username$hostname$localip$shlvl$directory$git_branch$git_commit$git_state$git_status$fill\${custom.config_branch}$line_break$character";
 
       directory.truncation_length = 50;
 
