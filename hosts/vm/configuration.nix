@@ -7,7 +7,8 @@ let
     # The default tmpfs store loses everything built in the VM at shutdown.
     writableStoreUseTmpfs = false;
     qemu.options = [
-      "-device virtio-vga-gl"
+      # QEMU's default is 1280x800, which Hyprland takes as the preferred mode.
+      "-device virtio-vga-gl,xres=2560,yres=1440"
       "-display gtk,gl=on"
     ];
   };
