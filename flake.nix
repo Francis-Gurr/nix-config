@@ -45,6 +45,9 @@
       homeConfigurations."francis@linux" = mkHome "x86_64-linux" ./home/linux.nix;
 
       checks = forEachSystem (system: {
+        # `nix flake check` does not build homeConfigurations on its own.
+        home = self.homeConfigurations."francis@linux".activationPackage;
+
         pre-commit = git-hooks.lib.${system}.run {
           src = ./.;
           hooks = {
