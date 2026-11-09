@@ -27,7 +27,7 @@ type:
 
 ### commitlint is the source of truth
 
-Repos set up from `~/.dotfiles/commitlint` enforce this with a commit-msg hook. Don't
+Repos with a commitlint config enforce this with a commit-msg hook. Don't
 reproduce the rules — read them from the resolved config:
 
 - Rules + the gitmoji for each type: `npx commitlint --print-config json`
@@ -37,7 +37,7 @@ reproduce the rules — read them from the resolved config:
   names the exact emoji), then retry. Never `git commit --no-verify`.
 
 If a repo has no commitlint, the canonical mapping lives in
-`~/.dotfiles/commitlint/commitlint.config.mjs`.
+`~/dev/nix-config/commitlint.config.mjs`.
 
 ## Creating a commit
 

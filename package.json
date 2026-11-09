@@ -2,7 +2,7 @@
   "name": "nix-config",
   "version": "0.0.0",
   "private": true,
-  "description": "Commit linting for the nix-config repo (see commitlint/README.md).",
+  "description": "Commit linting for the nix-config repo.",
   "devDependencies": {
     "@commitlint/cli": "^21.0.2",
     "@commitlint/config-conventional": "^21.0.2",
