@@ -11,7 +11,17 @@
       target = "obsidian-vaults/personal";
 
       settings = {
-        app.alwaysUpdateLinks = true;
+        # app.json is written whole, so anything omitted is dropped rather than
+        # left alone. Declaring one key silently reset the other six.
+        app = {
+          alwaysUpdateLinks = true;
+          attachmentFolderPath = "Attachments";
+          defaultViewMode = "preview";
+          newFileLocation = "current";
+          newLinkFormat = "shortest";
+          strictLineBreaks = true;
+          useMarkdownLinks = false;
+        };
         appearance = { };
 
         # Anything omitted is written as false, so this is the whole enabled set.
