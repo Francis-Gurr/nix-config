@@ -5,6 +5,7 @@
     btop
     fd
     gh
+    jq
     nerd-fonts.fira-code
     ripgrep
   ];
