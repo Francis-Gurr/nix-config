@@ -1,5 +1,5 @@
 -- Vue takeover via vtsls: https://github.com/vuejs/language-tools/wiki/Neovim
-local vue_language_server_path = vim.fn.expand("$MASON/packages/vue-language-server/node_modules/@vue/language-server")
+local vue_language_server_path = vim.env.VUE_LANGUAGE_SERVER_PATH
 
 local vue_plugin = {
   name = "@vue/typescript-plugin",

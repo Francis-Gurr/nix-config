@@ -20,6 +20,39 @@
       gcc
       ripgrep
       yarn
+
+      # TypeScript, JavaScript and Vue
+      eslint_d
+      prettierd
+      vscode-langservers-extracted
+      vtsls
+      vue-language-server
+
+      # Python
+      ruff
+
+      # Lua
+      lua-language-server
+      luajitPackages.luacheck
+      stylua
+
+      # Markdown
+      markdownlint-cli
+      marksman
+
+      # YAML
+      yaml-language-server
+
+      # Bash
+      bash-language-server
+      shellcheck
+    ];
+
+    # vtsls loads the Vue TypeScript plugin from this path, which only Nix knows.
+    extraWrapperArgs = [
+      "--set"
+      "VUE_LANGUAGE_SERVER_PATH"
+      "${pkgs.vue-language-server}/lib/language-tools/packages/language-server"
     ];
   };
 

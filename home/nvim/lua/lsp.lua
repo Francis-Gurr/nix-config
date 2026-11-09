@@ -1,43 +1,5 @@
 vim.pack.add({
   { src = "https://github.com/neovim/nvim-lspconfig" },
-  { src = "https://github.com/mason-org/mason.nvim" },
-  { src = "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim" },
-})
-
-require("mason").setup()
-
-require("mason-tool-installer").setup({
-  ensure_installed = {
-    -- Typescript, Javascript & Vue
-    "vue-language-server",
-    "vtsls",
-    "eslint_d", -- linter
-    "eslint-lsp",
-    "prettierd", -- formatter
-
-    -- python
-    "ruff", --lsp, linter & formatter
-
-    -- lua
-    "lua-language-server",
-    "luacheck", -- linter
-    "stylua", -- formatter
-
-    -- markdown
-    "marksman",
-    "markdownlint",
-
-    -- some spell checker
-    -- json
-    -- beancount
-
-    -- yaml
-    "yaml-language-server",
-
-    -- bash
-    "bash-language-server",
-    "shellcheck",
-  },
 })
 
 vim.lsp.enable({
