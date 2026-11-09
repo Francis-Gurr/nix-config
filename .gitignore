@@ -1,6 +1,7 @@
 result
 result-*
 *.qcow2
+nixos-efi-vars.fd
 .claude/
 node_modules/
 .direnv/

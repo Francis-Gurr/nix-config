@@ -44,6 +44,21 @@
     {
       homeConfigurations."francis@linux" = mkHome "x86_64-linux" ./home/linux.nix;
 
+      nixosConfigurations.vm = nixpkgs.lib.nixosSystem {
+        modules = [
+          { nixpkgs.hostPlatform = "x86_64-linux"; }
+          ./hosts/vm/configuration.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.francis = ./home/linux.nix;
+            };
+          }
+        ];
+      };
+
       checks = forEachSystem (system: {
         # `nix flake check` does not build homeConfigurations on its own.
         home = self.homeConfigurations."francis@linux".activationPackage;
