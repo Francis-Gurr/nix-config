@@ -18,7 +18,7 @@
     Unit.Description = "Clone missing repos from ~/.mrconfig";
     Service = {
       Type = "oneshot";
-      ExecStart = "${lib.getExe config.programs.mr.package} checkout";
+      ExecStart = "${lib.getExe' config.programs.mr.package "mr"} checkout";
       Environment = [
         # mr runs mkdir to create ~/dev, so coreutils is needed too.
         "PATH=${
