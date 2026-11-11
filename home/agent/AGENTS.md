@@ -25,6 +25,7 @@ The two copies diverge until every machine has moved to Nix; port changes across
 - Prefer rebasing and a linear branch history over merge commits.
 - Never create commits unless I explicitly ask. Stage the changes, then pause so I can review
   what is staged; on my approval, commit and push together without asking again.
+  Exception: edits to my Obsidian vault are notes, not code — commit and push those without asking.
 - Never `git push --force`. Only `git push --force-with-lease` if I explicitly ask.
 
 ## Code review
