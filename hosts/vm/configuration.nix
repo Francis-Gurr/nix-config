@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ config, lib, ... }:
 let
   # vmWithBootLoader does not inherit vmVariant, so both need the same settings.
   vmSettings = {
@@ -7,6 +7,8 @@ let
     diskSize = 40960;
     # The default tmpfs store loses everything built in the VM at shutdown.
     writableStoreUseTmpfs = false;
+    # qemu-vm.nix replaces the host's fileSystems, so the shares are added again here.
+    fileSystems = import ../homeserver-mounts.nix { inherit config lib; };
     qemu.options = [
       # QEMU's default is 1280x800, which Hyprland takes as the preferred mode.
       "-device virtio-vga-gl,xres=2560,yres=1440"
@@ -25,8 +27,19 @@ in
   };
   boot.loader.systemd-boot.enable = true;
 
-  # The VM reads a copy of the host's age key from $SHARED_DIR, so wiping the disk loses nothing.
-  sops.age.keyFile = lib.mkForce "/tmp/shared/keys.txt";
+  sops = {
+    # The VM reads a copy of the host's age key from $SHARED_DIR, so wiping the disk loses nothing.
+    age.keyFile = lib.mkForce "/tmp/shared/keys.txt";
+    # The VM rehearses francisPC, so it uses that machine's key.
+    secrets.ssh-key = {
+      sopsFile = ../francisPC/secrets.yaml;
+      owner = "francis";
+      path = "/home/francis/.ssh/id_ed25519";
+    };
+  };
+
+  # QEMU's DNS gives the guest no search domain, and the router only answers homeserver.localdomain.
+  networking.search = [ "localdomain" ];
 
   virtualisation = {
     vmVariant.virtualisation = vmSettings;

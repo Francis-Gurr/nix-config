@@ -23,6 +23,7 @@ home/
   obsidian.nix         editor app and its declarative settings
   packages.nix         CLI tools and fonts
   shell.nix            zsh, fzf, direnv
+  ssh.nix              ssh hosts for the homeserver
   starship.nix         prompt
   agent/               agent docs and skills, deployed read-only
   claude/              Claude Code settings
@@ -30,6 +31,8 @@ home/
   wallpaper.png        desktop wallpaper
 hosts/
   common.nix           NixOS base: boot, locale, network, audio, Hyprland, greetd, Steam, user
+  homeserver-mounts.nix Samba shares, used by every host and again by the VM
+  francisPC/secrets.yaml the workstation's SSH key, also used by the VM
   vm/configuration.nix VM host: disk, memory, display, age key path
 .sops.yaml             which age keys secrets.yaml is encrypted to
 secrets.yaml           encrypted secrets, edited with sops
@@ -142,6 +145,10 @@ sops secrets.yaml
 ```
 
 The login password is a hash, not the password itself. Generate one with `nix shell nixpkgs#mkpasswd -c mkpasswd`.
+
+Each machine has its own SSH key in `hosts/<machine>/secrets.yaml`, placed at `~/.ssh/id_ed25519` and authorised once on GitHub and the homeserver (`user` and `git`). A reinstall decrypts the same key, so nothing needs authorising again. To revoke a machine, remove its key from GitHub and the homeserver's `authorized_keys`.
+
+The homeserver's Samba shares `francis` and `shared` mount on first access under `/mnt/homeserver/`, with the login from the `samba-credentials` secret. The workstation reaches the homeserver over the LAN only.
 
 On a new NixOS machine, copy the key from Bitwarden to `/var/lib/sops-nix/key.txt` (root-owned, mode `600`) before the first boot. Without it, nothing decrypts and `francis` cannot log in.
 

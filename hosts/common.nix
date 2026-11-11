@@ -1,4 +1,9 @@
-{ config, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [
@@ -43,8 +48,16 @@
   sops = {
     defaultSopsFile = ../secrets.yaml;
     age.keyFile = "/var/lib/sops-nix/key.txt";
-    secrets.francis-password.neededForUsers = true;
+    secrets = {
+      francis-password.neededForUsers = true;
+      samba-credentials = { };
+    };
   };
+
+  fileSystems = import ./homeserver-mounts.nix { inherit config lib; };
+
+  # sops-nix would otherwise create ~/.ssh as root when placing the SSH key.
+  systemd.tmpfiles.rules = [ "d /home/francis/.ssh 0700 francis users -" ];
 
   users = {
     mutableUsers = false;
