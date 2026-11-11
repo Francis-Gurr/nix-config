@@ -35,7 +35,10 @@ let
   ) (lib.range 1 10);
 in
 {
-  imports = [ ./common.nix ];
+  imports = [
+    ./common.nix
+    ./repos.nix
+  ];
 
   home = {
     homeDirectory = "/home/francis";

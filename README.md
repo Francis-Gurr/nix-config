@@ -22,6 +22,7 @@ home/
   neovim.nix           neovim and its tooling
   obsidian.nix         editor app and its declarative settings
   packages.nix         CLI tools and fonts
+  repos.nix            repos cloned into ~/dev on login, via mr
   shell.nix            zsh, fzf, direnv
   ssh.nix              ssh hosts for the homeserver
   starship.nix         prompt
@@ -114,7 +115,7 @@ nixGL is needed because Nix-built QEMU cannot load Fedora's Mesa drivers for its
 
 Log in as `francis` with the password stored in `secrets.yaml`. Without `SHARED_DIR`, the password does not decrypt and login fails. `tuigreet` then starts Hyprland: `SUPER + RETURN` opens kitty and `SUPER + D` opens the launcher. The full bind list is in `home/linux.nix`.
 
-The VM keeps its disk in `./nixos.qcow2`, which is gitignored. Delete that file to start clean. It has no clone of this repo, so `~/.config/nvim` dangles until you clone to `~/dev/nix-config` inside it.
+The VM keeps its disk in `./nixos.qcow2`, which is gitignored. Delete that file to start clean. On login, `clone-repos` clones this repo and the others in `home/repos.nix` into `~/dev`, so `~/.config/nvim` resolves once it finishes.
 
 Build `system.build.vmWithBootLoader` instead to boot through a real bootloader. There is no physical NixOS host yet.
 
@@ -147,6 +148,8 @@ sops secrets.yaml
 The login password is a hash, not the password itself. Generate one with `nix shell nixpkgs#mkpasswd -c mkpasswd`.
 
 Each machine has its own SSH key in `hosts/<machine>/secrets.yaml`, placed at `~/.ssh/id_ed25519` and authorised once on GitHub and the homeserver (`user` and `git`). A reinstall decrypts the same key, so nothing needs authorising again. To revoke a machine, remove its key from GitHub and the homeserver's `authorized_keys`.
+
+Repos listed in `home/repos.nix` are cloned into `~/dev` on login, if missing, by the `clone-repos` user service. Existing checkouts are never touched; `mr status` shows uncommitted work across all of them.
 
 The homeserver's Samba shares `francis` and `shared` mount on first access under `/mnt/homeserver/`, with the login from the `samba-credentials` secret. The workstation reaches the homeserver over the LAN only.
 
