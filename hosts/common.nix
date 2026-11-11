@@ -17,7 +17,11 @@
   i18n.defaultLocale = "en_GB.UTF-8";
 
   networking.networkmanager.enable = true;
-  security.rtkit.enable = true;
+  security = {
+    rtkit.enable = true;
+    # Unlock the keyring with the login password.
+    pam.services.greetd.enableGnomeKeyring = true;
+  };
 
   programs = {
     # Pinned so an unattended clone never stops at "Host key verification failed".
@@ -33,6 +37,8 @@
   };
 
   services = {
+    # Secret Service for app login tokens; without it Electron apps store them under a fixed key.
+    gnome.gnome-keyring.enable = true;
     pipewire = {
       enable = true;
       alsa.enable = true;

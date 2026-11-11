@@ -12,20 +12,22 @@ Standalone means Home Manager manages the user environment only. It needs no Nix
 ## Layout
 
 ```
-flake.nix              inputs, homeConfigurations, nixosConfigurations, checks, devShell
+flake.nix              inputs, unstable overlay, homeConfigurations, nixosConfigurations, checks, devShell
 home/
   linux.nix            x86_64-linux entry point; imports common.nix; Hyprland desktop
   common.nix           shared base; imports the modules below
-  agent.nix            ~/.config/agent and ~/.claude
+  agent.nix            ~/.config/agent, ~/.claude and Claude Code
+  firefox.nix          Firefox prefs that Sync does not cover
   git.nix              git, delta, lazygit
   kitty.nix            terminal
   neovim.nix           neovim and its tooling
   obsidian.nix         editor app and its declarative settings
-  packages.nix         CLI tools and fonts
+  packages.nix         CLI tools, fonts and Bitwarden
   repos.nix            repos cloned into ~/dev on login, via mr
   shell.nix            zsh, fzf, direnv
   ssh.nix              ssh hosts for the homeserver
   starship.nix         prompt
+  vscode.nix           VS Code with its settings and extensions
   agent/               agent docs and skills, deployed read-only
   claude/              Claude Code settings
   nvim/                neovim config, symlinked to the working tree
@@ -118,6 +120,14 @@ Log in as `francis` with the password stored in `secrets.yaml`. Without `SHARED_
 The VM keeps its disk in `./nixos.qcow2`, which is gitignored. Delete that file to start clean. On login, `clone-repos` clones this repo and the others in `home/repos.nix` into `~/dev`, so `~/.config/nvim` resolves once it finishes.
 
 Build `system.build.vmWithBootLoader` instead to boot through a real bootloader. There is no physical NixOS host yet.
+
+Everything comes from `nixos-26.05` except three packages taken from `nixos-unstable` by an overlay in `flake.nix`: `claude-code` and its VS Code extension, because stable stopped updating them, and `vscode`, because stable's fails to build. Add to that overlay only when stable cannot serve a package.
+
+Claude desktop comes from the [`aaddrick/claude-desktop-debian`](https://github.com/aaddrick/claude-desktop-debian) flake, which repackages Anthropic's official Linux `.deb` from `downloads.claude.ai`. Its repo bumps itself with a bot token, so after `nix flake update` check what changed in the input's `nix/` and `flake.nix` before switching.
+
+Login tokens for Claude desktop, VS Code and other Electron apps live in gnome-keyring, unlocked at login. Apps are dark through `gtk.colorScheme` in `home/linux.nix`.
+
+VS Code settings and extensions are declared in `home/vscode.nix`, so its settings screen cannot save changes. Edit the file and rebuild.
 
 ## Day to day
 

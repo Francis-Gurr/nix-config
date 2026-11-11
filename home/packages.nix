@@ -2,6 +2,8 @@
 {
   home.packages = with pkgs; [
     bat
+    bitwarden-desktop
+    claude-desktop
     btop
     fd
     gh

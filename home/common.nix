@@ -2,6 +2,7 @@
 {
   imports = [
     ./agent.nix
+    ./firefox.nix
     ./git.nix
     ./kitty.nix
     ./neovim.nix
@@ -10,6 +11,7 @@
     ./shell.nix
     ./ssh.nix
     ./starship.nix
+    ./vscode.nix
   ];
 
   home = {

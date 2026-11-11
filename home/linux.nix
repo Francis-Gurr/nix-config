@@ -52,6 +52,12 @@ in
     ];
   };
 
+  # Apps read this through the GTK portal; full theming comes later with Stylix.
+  gtk = {
+    enable = true;
+    colorScheme = "dark";
+  };
+
   wayland.windowManager.hyprland = {
     enable = true;
     # The NixOS module installs Hyprland and its portal.
