@@ -13,6 +13,11 @@
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -21,6 +26,7 @@
       nixpkgs,
       home-manager,
       git-hooks,
+      sops-nix,
     }:
     let
       system = "x86_64-linux";
@@ -43,6 +49,7 @@
         modules = [
           { nixpkgs.hostPlatform = system; }
           ./hosts/vm/configuration.nix
+          sops-nix.nixosModules.sops
           home-manager.nixosModules.home-manager
           {
             home-manager = {
@@ -84,6 +91,7 @@
         packages = self.checks.${system}.pre-commit.enabledPackages ++ [
           pkgs.nodejs
           pkgs.pnpm
+          pkgs.sops
         ];
       };
     };
