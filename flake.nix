@@ -64,6 +64,34 @@
         config.allowUnfree = true;
         inherit overlays;
       };
+
+      # Takes a list so a host can add modules of its own, such as lanzaboote.
+      mkHost =
+        modules:
+        nixpkgs.lib.nixosSystem {
+          modules = [
+            {
+              nixpkgs = {
+                hostPlatform = system;
+                inherit overlays;
+              };
+            }
+            sops-nix.nixosModules.sops
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                # The vault syncs only on NixOS; Fedora's standalone config shares home/linux.nix.
+                users.francis.imports = [
+                  ./home/linux.nix
+                  ./home/vault.nix
+                ];
+              };
+            }
+          ]
+          ++ modules;
+        };
     in
     {
       homeConfigurations."francis@linux" = home-manager.lib.homeManagerConfiguration {
@@ -71,29 +99,9 @@
         modules = [ ./home/linux.nix ];
       };
 
-      nixosConfigurations.vm = nixpkgs.lib.nixosSystem {
-        modules = [
-          {
-            nixpkgs = {
-              hostPlatform = system;
-              inherit overlays;
-            };
-          }
-          ./hosts/vm/configuration.nix
-          sops-nix.nixosModules.sops
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              # The vault syncs only on NixOS; Fedora's standalone config shares home/linux.nix.
-              users.francis.imports = [
-                ./home/linux.nix
-                ./home/vault.nix
-              ];
-            };
-          }
-        ];
+      nixosConfigurations = {
+        vm = mkHost [ ./hosts/vm/configuration.nix ];
+        francisPC = mkHost [ ./hosts/francisPC/configuration.nix ];
       };
 
       checks.${system} = {

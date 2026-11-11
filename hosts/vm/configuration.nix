@@ -31,11 +31,7 @@ in
     # The VM reads a copy of the host's age key from $SHARED_DIR, so wiping the disk loses nothing.
     age.keyFile = lib.mkForce "/tmp/shared/keys.txt";
     # The VM rehearses francisPC, so it uses that machine's key.
-    secrets.ssh-key = {
-      sopsFile = ../francisPC/secrets.yaml;
-      owner = "francis";
-      path = "/home/francis/.ssh/id_ed25519";
-    };
+    secrets.ssh-key.sopsFile = ../francisPC/secrets.yaml;
   };
 
   # QEMU's DNS gives the guest no search domain, and the router only answers homeserver.localdomain.

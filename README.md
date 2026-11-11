@@ -34,9 +34,9 @@ home/
   nvim/                neovim config, symlinked to the working tree
   wallpaper.png        desktop wallpaper
 hosts/
-  common.nix           NixOS base: boot, locale, network, audio, Hyprland, greetd, Steam, user
+  common.nix           NixOS base: boot, locale, network and Wi-Fi, audio, Hyprland, greetd, Steam, user
   homeserver-mounts.nix Samba shares, used by every host and again by the VM
-  francisPC/secrets.yaml the workstation's SSH key, also used by the VM
+  francisPC/           the AMD workstation: host settings, hand-written hardware file, SSH key (also used by the VM)
   vm/configuration.nix VM host: disk, memory, display, age key path
 .sops.yaml             which age keys secrets.yaml is encrypted to
 secrets.yaml           encrypted secrets, edited with sops

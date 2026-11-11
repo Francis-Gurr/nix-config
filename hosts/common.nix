@@ -16,7 +16,24 @@
   time.timeZone = "Europe/Berlin";
   i18n.defaultLocale = "en_GB.UTF-8";
 
-  networking.networkmanager.enable = true;
+  networking.networkmanager = {
+    enable = true;
+    # Declared so a fresh install joins Wi-Fi on its own; the PSK comes from sops.
+    ensureProfiles = {
+      environmentFiles = [ config.sops.secrets.wifi-env.path ];
+      profiles.Camelot = {
+        connection = {
+          id = "Camelot";
+          type = "wifi";
+        };
+        wifi.ssid = "Camelot";
+        wifi-security = {
+          key-mgmt = "wpa-psk";
+          psk = "$WIFI_PSK";
+        };
+      };
+    };
+  };
   security = {
     rtkit.enable = true;
     # Unlock the keyring with the login password.
@@ -60,6 +77,12 @@
     secrets = {
       francis-password.neededForUsers = true;
       samba-credentials = { };
+      # Each host sets sopsFile to its own key.
+      ssh-key = {
+        owner = "francis";
+        path = "/home/francis/.ssh/id_ed25519";
+      };
+      wifi-env = { };
     };
   };
 
