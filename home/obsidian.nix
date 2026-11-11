@@ -8,7 +8,7 @@
     # community-plugins.json must stay Obsidian's, since LiveSync's data.json
     # holds the CouchDB credentials and cannot live in a public repo.
     vaults."personal" = {
-      target = "obsidian-vaults/personal";
+      target = "notes/personal";
 
       settings = {
         # app.json is written whole, so anything omitted is dropped rather than

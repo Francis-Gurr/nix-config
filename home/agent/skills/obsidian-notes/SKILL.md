@@ -3,9 +3,9 @@ name: obsidian-notes
 description: Use when reading or writing notes in my personal Obsidian vault — folder structure, frontmatter, note shape, naming, and Obsidian-flavoured Markdown. Read by the obsidian-project and obsidian-plan skills.
 ---
 
-Vault is `~/obsidian-vaults/personal`. **If it does not exist, say so and stop** — do not
+Vault is `~/notes/personal`. **If it does not exist, say so and stop** — do not
 create it. It is absent on work machines, and a fake vault produces notes that never sync. The
-shared vault (`~/obsidian-vaults/shared`) is out of scope.
+shared vault (`~/notes/shared`) is out of scope.
 
 Write notes with the `caveman` skill: tight prose, no filler.
 

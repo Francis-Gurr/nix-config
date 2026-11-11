@@ -9,7 +9,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -d \"$HOME/obsidian-vaults/personal\" ] || exit 0; printf \"%s\\n\" \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PostToolUse\\\",\\\"additionalContext\\\":\\\"The plan was just approved. Offer to save it to the Obsidian vault using the obsidian-plan skill: it belongs on an existing task or workstream as status draft or todo, never as a separate plan note. Apply the sizing rule first - trivial work does not warrant a note.\\\"}}\""
+            "command": "[ -d \"$HOME/notes/personal\" ] || exit 0; printf \"%s\\n\" \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PostToolUse\\\",\\\"additionalContext\\\":\\\"The plan was just approved. Offer to save it to the Obsidian vault using the obsidian-plan skill: it belongs on an existing task or workstream as status draft or todo, never as a separate plan note. Apply the sizing rule first - trivial work does not warrant a note.\\\"}}\""
           }
         ]
       }
