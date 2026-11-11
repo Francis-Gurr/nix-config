@@ -133,7 +133,7 @@ Flakes only see git-tracked files, so `git add` a new file before building it.
 
 ## Secrets
 
-Secrets live encrypted in `secrets.yaml`, managed by [sops-nix](https://github.com/Mic92/sops-nix). Every machine decrypts them at boot with the same personal age key. The private half lives at `~/.config/sops/age/keys.txt` on Fedora and in Vaultwarden, and never in this repo.
+Secrets live encrypted in `secrets.yaml`, managed by [sops-nix](https://github.com/Mic92/sops-nix). Every machine decrypts them at boot with the same personal age key. The private half lives at `~/.config/sops/age/keys.txt` on Fedora and in Bitwarden, and never in this repo.
 
 Edit secrets from the devShell. `sops` decrypts the file into your editor and re-encrypts it on save:
 
@@ -143,7 +143,7 @@ sops secrets.yaml
 
 The login password is a hash, not the password itself. Generate one with `nix shell nixpkgs#mkpasswd -c mkpasswd`.
 
-On a new NixOS machine, copy the key from Vaultwarden to `/var/lib/sops-nix/key.txt` (root-owned, mode `600`) before the first boot. Without it, nothing decrypts and `francis` cannot log in.
+On a new NixOS machine, copy the key from Bitwarden to `/var/lib/sops-nix/key.txt` (root-owned, mode `600`) before the first boot. Without it, nothing decrypts and `francis` cannot log in.
 
 ## Development
 
