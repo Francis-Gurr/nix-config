@@ -30,7 +30,9 @@ home/
   wallpaper.png        desktop wallpaper
 hosts/
   common.nix           NixOS base: boot, locale, network, audio, Hyprland, greetd, Steam, user
-  vm/configuration.nix VM host: disk, memory, display
+  vm/configuration.nix VM host: disk, memory, display, age key path
+.sops.yaml             which age keys secrets.yaml is encrypted to
+secrets.yaml           encrypted secrets, edited with sops
 ```
 
 One file per concern. `common.nix` holds only the shared base: `username`, `stateVersion`, Home Manager itself, and the import list. `linux.nix` carries the home directory and anything OS-specific: the Hyprland session, waybar, the launcher, notifications, the wallpaper, and packages such as `imv` and `wl-clipboard`.
@@ -91,12 +93,23 @@ Reopen your terminal so the profile lands on `PATH`.
 
 ## Run the NixOS VM
 
+The VM decrypts its login password with your age key (see [Secrets](#secrets)). Copy the key into its own directory once, so the VM cannot touch the original:
+
 ```bash
-nix build .#nixosConfigurations.vm.config.system.build.vm
-./result/bin/run-nixos-vm
+mkdir -p ~/.local/share/nixos-vm-key
+cp ~/.config/sops/age/keys.txt ~/.local/share/nixos-vm-key/
 ```
 
-Log in as `francis` with the password `changeme`. `tuigreet` then starts Hyprland: `SUPER + RETURN` opens kitty and `SUPER + D` opens the launcher. The full bind list is in `home/linux.nix`.
+Then build and launch:
+
+```bash
+nix build .#nixosConfigurations.vm.config.system.build.vm
+SHARED_DIR=~/.local/share/nixos-vm-key nix run --impure github:nix-community/nixGL -- ./result/bin/run-nixos-vm
+```
+
+nixGL is needed because Nix-built QEMU cannot load Fedora's Mesa drivers for its GL display.
+
+Log in as `francis` with the password stored in `secrets.yaml`. Without `SHARED_DIR`, the password does not decrypt and login fails. `tuigreet` then starts Hyprland: `SUPER + RETURN` opens kitty and `SUPER + D` opens the launcher. The full bind list is in `home/linux.nix`.
 
 The VM keeps its disk in `./nixos.qcow2`, which is gitignored. Delete that file to start clean. It has no clone of this repo, so `~/.config/nvim` dangles until you clone to `~/dev/nix-config` inside it.
 
@@ -117,6 +130,20 @@ Deployed config is read-only, because it lives in the Nix store. Editing `~/.con
 `home/nvim` is the one exception, symlinked to the working tree because `vim.pack` writes its lockfile back into its own config directory. Edits there apply without a rebuild. Prefer store copies for anything else, unless a tool insists on writing to its config.
 
 Flakes only see git-tracked files, so `git add` a new file before building it.
+
+## Secrets
+
+Secrets live encrypted in `secrets.yaml`, managed by [sops-nix](https://github.com/Mic92/sops-nix). Every machine decrypts them at boot with the same personal age key. The private half lives at `~/.config/sops/age/keys.txt` on Fedora and in Vaultwarden, and never in this repo.
+
+Edit secrets from the devShell. `sops` decrypts the file into your editor and re-encrypts it on save:
+
+```bash
+sops secrets.yaml
+```
+
+The login password is a hash, not the password itself. Generate one with `nix shell nixpkgs#mkpasswd -c mkpasswd`.
+
+On a new NixOS machine, copy the key from Vaultwarden to `/var/lib/sops-nix/key.txt` (root-owned, mode `600`) before the first boot. Without it, nothing decrypts and `francis` cannot log in.
 
 ## Development
 

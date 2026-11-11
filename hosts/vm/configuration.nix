@@ -1,3 +1,4 @@
+{ lib, ... }:
 let
   # vmWithBootLoader does not inherit vmVariant, so both need the same settings.
   vmSettings = {
@@ -23,6 +24,9 @@ in
     fsType = "ext4";
   };
   boot.loader.systemd-boot.enable = true;
+
+  # The VM reads a copy of the host's age key from $SHARED_DIR, so wiping the disk loses nothing.
+  sops.age.keyFile = lib.mkForce "/tmp/shared/keys.txt";
 
   virtualisation = {
     vmVariant.virtualisation = vmSettings;

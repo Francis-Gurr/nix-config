@@ -1,0 +1,5 @@
+keys:
+  - &francis age1l58xyy7qclm8ma2lptffnlv4s77u9k5nqtj69694mdgnq9zpsssq7mh5e3
+creation_rules:
+  - path_regex: secrets\.yaml$
+    age: *francis

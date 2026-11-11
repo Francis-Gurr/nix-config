@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [
@@ -40,14 +40,23 @@
   # Set explicitly because programs.steam is the only other definition.
   hardware.graphics.enable = true;
 
-  users.users.francis = {
-    isNormalUser = true;
-    extraGroups = [
-      "wheel"
-      "networkmanager"
-    ];
-    shell = pkgs.zsh;
-    initialPassword = "changeme";
+  sops = {
+    defaultSopsFile = ../secrets.yaml;
+    age.keyFile = "/var/lib/sops-nix/key.txt";
+    secrets.francis-password.neededForUsers = true;
+  };
+
+  users = {
+    mutableUsers = false;
+    users.francis = {
+      isNormalUser = true;
+      extraGroups = [
+        "wheel"
+        "networkmanager"
+      ];
+      shell = pkgs.zsh;
+      hashedPasswordFile = config.sops.secrets.francis-password.path;
+    };
   };
 
   system.stateVersion = "26.05";
