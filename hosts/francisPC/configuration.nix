@@ -20,6 +20,9 @@
     efi.canTouchEfiVariables = true;
   };
 
+  # The Xbox controller dongle; without it, mt76x2u claims the dongle as a Wi-Fi card.
+  hardware.xone.enable = true;
+
   # Windows keeps the hardware clock in local time.
   time.hardwareClockInLocalTime = true;
 
