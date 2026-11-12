@@ -3,7 +3,8 @@
   home.packages = with pkgs; [
     bat
     bitwarden-desktop
-    claude-desktop
+    # The FHS env runs the claude binary, MCP servers and Cowork VM the app downloads.
+    claude-desktop-fhs
     btop
     fd
     gh

@@ -142,7 +142,7 @@ Build `system.build.vmWithBootLoader` instead to boot through a real bootloader.
 
 Everything comes from `nixos-26.05` except three packages taken from `nixos-unstable` by an overlay in `flake.nix`: `claude-code` and its VS Code extension, because stable stopped updating them, and `vscode`, because stable's fails to build. Add to that overlay only when stable cannot serve a package.
 
-Claude desktop comes from the [`aaddrick/claude-desktop-debian`](https://github.com/aaddrick/claude-desktop-debian) flake, which repackages Anthropic's official Linux `.deb` from `downloads.claude.ai`. Its repo bumps itself with a bot token, so after `nix flake update` check what changed in the input's `nix/` and `flake.nix` before switching.
+Claude desktop comes from the [`aaddrick/claude-desktop-debian`](https://github.com/aaddrick/claude-desktop-debian) flake, which repackages Anthropic's official Linux `.deb` from `downloads.claude.ai`. The config uses its `claude-desktop-fhs` variant, because the app downloads its own `claude` binary and MCP servers, which NixOS cannot run outside an FHS environment. Its repo bumps itself with a bot token, so after `nix flake update` check what changed in the input's `nix/` and `flake.nix` before switching.
 
 Login tokens for Claude desktop, VS Code and other Electron apps live in gnome-keyring, unlocked at login. Apps are dark through `gtk.colorScheme` in `home/linux.nix`.
 
