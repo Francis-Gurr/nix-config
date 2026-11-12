@@ -1,11 +1,12 @@
 # nix-config
 
-Declarative user environment built on [Home Manager](https://github.com/nix-community/home-manager), with a NixOS system layer. Two outputs share `home/linux.nix`:
+Declarative user environment built on [Home Manager](https://github.com/nix-community/home-manager), with a NixOS system layer. Three outputs share `home/linux.nix`:
 
 | Output | Target | Home Manager runs |
 |---|---|---|
-| `homeConfigurations."francis@linux"` | Fedora workstation | standalone |
-| `nixosConfigurations.vm` | NixOS test VM with a Hyprland desktop | as a NixOS module |
+| `nixosConfigurations.francisPC` | AMD workstation, NixOS with a Hyprland desktop | as a NixOS module |
+| `nixosConfigurations.vm` | NixOS test VM, built from the same base | as a NixOS module |
+| `homeConfigurations."francis@linux"` | Fedora, kept as a fallback on the workstation | standalone |
 
 Standalone means Home Manager manages the user environment only. It needs no NixOS and no root once Nix itself is installed.
 
@@ -43,6 +44,23 @@ secrets.yaml           encrypted secrets, edited with sops
 ```
 
 One file per concern. `common.nix` holds only the shared base: `username`, `stateVersion`, Home Manager itself, and the import list. `linux.nix` carries the home directory and anything OS-specific: the Hyprland session, waybar, the launcher, notifications, the wallpaper, and packages such as `imv` and `wl-clipboard`.
+
+## Install NixOS
+
+From the NixOS graphical installer, as root, with the target root partition mounted at `/mnt` and the ESP at `/mnt/boot`:
+
+```bash
+nix-shell -p git
+git clone https://github.com/Francis-Gurr/nix-config /mnt/home/francis/dev/nix-config
+install -d -m 700 /mnt/var/lib/sops-nix
+install -m 600 /dev/stdin /mnt/var/lib/sops-nix/key.txt   # paste the age key from Bitwarden, then Ctrl+D
+nixos-install --no-root-passwd --flake /mnt/home/francis/dev/nix-config#francisPC
+chown -R 1000:100 /mnt/home/francis
+```
+
+A new host needs `hosts/<name>/` and a `mkHost` entry in `flake.nix` first. Its hardware file mounts by label and UUID, so it can be written before formatting.
+
+There is no root password: `mutableUsers` is off and root is reached through `sudo`. zsh is the login shell from the NixOS config, so the `chsh` step below is Fedora-only. On first login, Wi-Fi, the repos, the vault and the SSH key all arrive with nothing done by hand.
 
 ## Set up Fedora
 
@@ -120,7 +138,7 @@ Log in as `francis` with the password stored in `secrets.yaml`. Without `SHARED_
 
 The VM keeps its disk in `./nixos.qcow2`, which is gitignored. Delete that file to start clean. On login, `clone-repos` clones this repo and the others in `home/repos.nix` into `~/dev`, so `~/.config/nvim` resolves once it finishes.
 
-Build `system.build.vmWithBootLoader` instead to boot through a real bootloader. There is no physical NixOS host yet.
+Build `system.build.vmWithBootLoader` instead to boot through a real bootloader.
 
 Everything comes from `nixos-26.05` except three packages taken from `nixos-unstable` by an overlay in `flake.nix`: `claude-code` and its VS Code extension, because stable stopped updating them, and `vscode`, because stable's fails to build. Add to that overlay only when stable cannot serve a package.
 
@@ -132,13 +150,19 @@ VS Code settings and extensions are declared in `home/vscode.nix`, so its settin
 
 ## Day to day
 
-Edit a file under `home/`, then rebuild and activate. On Fedora:
+Edit a file, then rebuild and activate. On NixOS, this applies both `hosts/` and `home/`:
+
+```bash
+sudo nixos-rebuild switch --flake ~/dev/nix-config#francisPC
+```
+
+On Fedora, only `home/` applies:
 
 ```bash
 nix build '.#homeConfigurations."francis@linux".activationPackage' && ./result/activate
 ```
 
-For the VM, rebuild it as above and restart it. Changes under `hosts/` only reach the VM.
+For the VM, rebuild it as above and restart it.
 
 Deployed config is read-only, because it lives in the Nix store. Editing `~/.config/agent/AGENTS.md` fails rather than silently doing nothing — the source is `home/agent/AGENTS.md` and the change needs a rebuild.
 
