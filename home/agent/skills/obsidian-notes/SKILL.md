@@ -145,6 +145,9 @@ obsidian vault="personal" delete file=<name>
 the shared one. Never `mv` or `rm` a note. If the CLI is unavailable, say what needs renaming and
 leave it; a deferred rename beats silently broken links.
 
+From inside VS Code, run it as `env -u ELECTRON_RUN_AS_NODE obsidian …`: VS Code exports that
+variable, which makes Obsidian start as plain Node and fail with `Cannot find module 'electron'`.
+
 `.obsidian/*.json` is the exception: the running app holds config in memory and overwrites those
 files on exit, so they can only be edited with Obsidian closed. Anything needed while it runs goes
 through Settings.
