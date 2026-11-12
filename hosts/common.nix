@@ -5,6 +5,8 @@
   ...
 }:
 {
+  imports = [ ./update.nix ];
+
   nixpkgs.config.allowUnfree = true;
   nix.settings.experimental-features = [
     "nix-command"
@@ -54,7 +56,7 @@
   };
 
   services = {
-    # Device firmware from LVFS; run `fwupdmgr update` now and then.
+    # Device firmware from LVFS; the `update` command applies it.
     fwupd.enable = true;
     # Secret Service for app login tokens; without it Electron apps store them under a fixed key.
     gnome.gnome-keyring.enable = true;

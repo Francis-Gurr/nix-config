@@ -37,6 +37,7 @@ home/
 hosts/
   common.nix           NixOS base: boot, locale, network and Wi-Fi, audio, Hyprland, greetd, Steam, user
   homeserver-mounts.nix Samba shares, used by every host and again by the VM
+  update.nix           nh, its weekly clean, and the `update` command
   francisPC/           the AMD workstation: host settings, hand-written hardware file, SSH key (also used by the VM)
   vm/configuration.nix VM host: disk, memory, display, age key path
 .sops.yaml             which age keys secrets.yaml is encrypted to
@@ -153,8 +154,10 @@ VS Code settings and extensions are declared in `home/vscode.nix`, so its settin
 Edit a file, then rebuild and activate. On NixOS, this applies both `hosts/` and `home/`:
 
 ```bash
-sudo nixos-rebuild switch --flake ~/dev/nix-config#francisPC
+sudo nixos-rebuild switch --flake ~/dev/nix-config#francisPC   # or: nh os switch
 ```
+
+To update, run `update` (`hosts/update.nix`). It pulls the repo, then `nh os switch --update --ask` moves the inputs in `flake.lock`, builds, shows the package diff and asks before switching. If you accept, it commits and pushes `flake.lock`. If you decline or the build fails, the old pins stay. Last, it applies any device firmware updates from fwupd; one that needs a reboot installs at the next one. Nothing updates on its own. `nh clean` runs weekly and keeps the last five generations plus anything from the past 30 days. Roll back with `sudo nixos-rebuild switch --rollback`, or hold Space at boot.
 
 On Fedora, only `home/` applies:
 
