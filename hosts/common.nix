@@ -54,6 +54,8 @@
   };
 
   services = {
+    # Device firmware from LVFS; run `fwupdmgr update` now and then.
+    fwupd.enable = true;
     # Secret Service for app login tokens; without it Electron apps store them under a fixed key.
     gnome.gnome-keyring.enable = true;
     pipewire = {
