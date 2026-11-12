@@ -64,6 +64,8 @@ in
     package = null;
     portalPackage = null;
     settings = {
+      # Updates arrive through the flake, so the post-update changelog popup is noise.
+      config.ecosystem.no_update_news = true;
       monitor = [
         {
           output = "";
