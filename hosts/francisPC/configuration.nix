@@ -10,6 +10,8 @@
   sops.secrets.ssh-key.sopsFile = ./secrets.yaml;
 
   boot.loader = {
+    # Windows and Fedora are reached through F8, so the menu only lists generations; hold Space for it.
+    timeout = 0;
     systemd-boot = {
       enable = true;
       # The 600M ESP is shared with Fedora and holds every generation's kernel.
