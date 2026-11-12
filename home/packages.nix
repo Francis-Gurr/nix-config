@@ -9,6 +9,7 @@
     gh
     jq
     nerd-fonts.fira-code
+    python3
     ripgrep
   ];
 
