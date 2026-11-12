@@ -135,7 +135,11 @@ in
   };
 
   services = {
-    hyprlauncher.enable = true;
+    hyprlauncher = {
+      enable = true;
+      # Give each app its own scope, so restarting the launcher does not kill everything it opened.
+      settings.finders.desktop_launch_prefix = "systemd-run --user --scope --quiet --";
+    };
     mako.enable = true;
     hyprpolkitagent.enable = true;
     hyprpaper = {
