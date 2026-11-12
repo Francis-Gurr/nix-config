@@ -52,6 +52,9 @@ in
     ];
   };
 
+  # Electron only uses the keyring on desktops it recognises, not Hyprland; claude-desktop's launcher reads this.
+  systemd.user.sessionVariables.CLAUDE_PASSWORD_STORE = "gnome-libsecret";
+
   # Apps read this through the GTK portal; full theming comes later with Stylix.
   gtk = {
     enable = true;
