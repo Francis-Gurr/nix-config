@@ -163,6 +163,9 @@ in
   };
 
   programs = {
+    # Hyprland sizes windows; a remembered maximized state reopens kitty over the tiling layout.
+    kitty.settings.remember_window_size = "no";
+
     waybar = {
       enable = true;
       systemd.enable = true;
