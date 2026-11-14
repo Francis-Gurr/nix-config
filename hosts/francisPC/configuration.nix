@@ -34,9 +34,8 @@
 
   # The MT7922 card's Bluetooth; the VM has no adapter, so this stays per host.
   hardware.bluetooth.enable = true;
+  # Its tray applet starts from XDG autostart, which UWSM runs.
   services.blueman.enable = true;
-  # Hyprland runs no XDG autostart, so the tray applet needs its own unit.
-  home-manager.users.francis.services.blueman-applet.enable = true;
 
   # Windows keeps the hardware clock in local time.
   time.hardwareClockInLocalTime = true;
