@@ -13,9 +13,13 @@
     "flakes"
   ];
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-  # Keep kernel errors off the tty, where they overwrite tuigreet's fields; they stay in the journal.
-  boot.consoleLogLevel = 3;
+  boot = {
+    kernelPackages = pkgs.linuxPackages_latest;
+    # Keep kernel errors off the tty, where they overwrite tuigreet's fields; they stay in the journal.
+    consoleLogLevel = 3;
+    # Not tmpfs like Fedora: Nix builds in /tmp and a large one could exhaust RAM.
+    tmp.cleanOnBoot = true;
+  };
 
   # Fedora's default; with no swap partition, memory pressure goes straight to the OOM killer.
   zramSwap.enable = true;

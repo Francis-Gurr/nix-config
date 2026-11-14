@@ -111,6 +111,12 @@ in
     colorScheme = "dark";
   };
 
+  # Apps such as grimblast and Firefox save to these; without them they fall back to ~.
+  xdg.userDirs = {
+    enable = true;
+    createDirectories = true;
+  };
+
   # Owning the file means apps can no longer register handlers themselves; add them here.
   xdg.mimeApps = {
     enable = true;
