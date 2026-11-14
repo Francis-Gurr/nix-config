@@ -52,22 +52,53 @@ in
     ];
   };
 
-  # Electron only uses the keyring on desktops it recognises, not Hyprland; claude-desktop's launcher reads this.
-  systemd.user.sessionVariables.CLAUDE_PASSWORD_STORE = "gnome-libsecret";
+  systemd.user = {
+    # Electron only uses the keyring on desktops it recognises, not Hyprland; claude-desktop's launcher reads this.
+    sessionVariables.CLAUDE_PASSWORD_STORE = "gnome-libsecret";
 
-  # PAM starts and unlocks the keyring at login, but outside GNOME nothing tells it to serve
-  # secrets, so D-Bus starts a second, locked daemon instead.
-  systemd.user.services.gnome-keyring-start = {
-    Unit = {
-      Description = "Hand the PAM-unlocked keyring to the session";
-      After = [ "graphical-session-pre.target" ];
-      PartOf = [ "graphical-session.target" ];
+    # PAM starts and unlocks the keyring at login, but outside GNOME nothing tells it to serve
+    # secrets, so D-Bus starts a second, locked daemon instead.
+    services.gnome-keyring-start = {
+      Unit = {
+        Description = "Hand the PAM-unlocked keyring to the session";
+        After = [ "graphical-session-pre.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
+      Service = {
+        Type = "oneshot";
+        ExecStart = "${pkgs.gnome-keyring}/bin/gnome-keyring-daemon --start --components=secrets";
+      };
+      Install.WantedBy = [ "graphical-session.target" ];
     };
-    Service = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.gnome-keyring}/bin/gnome-keyring-daemon --start --components=secrets";
+
+    # The tty hides boot errors behind the greeter, so raise failed units where they will be seen.
+    services.notify-failed-units = {
+      Unit = {
+        Description = "Notify about units that failed during boot";
+        After = [ "graphical-session.target" ];
+        PartOf = [ "graphical-session.target" ];
+      };
+      Service = {
+        Type = "oneshot";
+        ExecStart = lib.getExe (
+          pkgs.writeShellApplication {
+            name = "notify-failed-units";
+            runtimeInputs = [ pkgs.libnotify ];
+            text = ''
+              failed=$({
+                systemctl --failed --plain --no-legend
+                systemctl --user --failed --plain --no-legend
+              } | awk '{ print $1 }')
+              if [ -n "$failed" ]; then
+                notify-send --urgency=critical --app-name=systemd "Failed units" \
+                  "$failed"$'\n\nInspect with systemctl status <unit>.'
+              fi
+            '';
+          }
+        );
+      };
+      Install.WantedBy = [ "graphical-session.target" ];
     };
-    Install.WantedBy = [ "graphical-session.target" ];
   };
 
   # Apps read this through the GTK portal; full theming comes later with Stylix.
