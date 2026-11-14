@@ -32,6 +32,12 @@
   # The Xbox controller dongle; without it, mt76x2u claims the dongle as a Wi-Fi card.
   hardware.xone.enable = true;
 
+  # The MT7922 card's Bluetooth; the VM has no adapter, so this stays per host.
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
+  # Hyprland runs no XDG autostart, so the tray applet needs its own unit.
+  home-manager.users.francis.services.blueman-applet.enable = true;
+
   # Windows keeps the hardware clock in local time.
   time.hardwareClockInLocalTime = true;
 }

@@ -44,7 +44,7 @@ hosts/
 secrets.yaml           encrypted secrets, edited with sops
 ```
 
-One file per concern. `common.nix` holds only the shared base: `username`, `stateVersion`, Home Manager itself, and the import list. `linux.nix` carries the home directory and anything OS-specific: the Hyprland session, waybar, the launcher, notifications, the wallpaper, and packages such as `imv` and `wl-clipboard`.
+One file per concern. `common.nix` holds only the shared base: `username`, `stateVersion`, Home Manager itself, and the import list. `linux.nix` carries the home directory and anything OS-specific: the Hyprland session, waybar, the launcher, notifications, the wallpaper, desktop apps with their default file associations, and packages such as `imv` and `wl-clipboard`.
 
 ## Install NixOS
 

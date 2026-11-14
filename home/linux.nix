@@ -1,6 +1,7 @@
 { lib, pkgs, ... }:
 let
   lua = lib.generators.mkLuaInline;
+  openWith = app: mimeTypes: lib.genAttrs mimeTypes (_: app);
   bind = key: dispatcher: {
     _args = [
       key
@@ -45,8 +46,11 @@ in
 
     packages = with pkgs; [
       brightnessctl
+      grimblast
+      hyprpicker
       imv
       libnotify
+      pavucontrol
       playerctl
       wl-clipboard
     ];
@@ -105,6 +109,43 @@ in
   gtk = {
     enable = true;
     colorScheme = "dark";
+  };
+
+  # Owning the file means apps can no longer register handlers themselves; add them here.
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications =
+      openWith "org.pwmt.zathura-pdf-mupdf.desktop" [ "application/pdf" ]
+      // openWith "thunar.desktop" [ "inode/directory" ]
+      // openWith "imv.desktop" [
+        "image/bmp"
+        "image/gif"
+        "image/jpeg"
+        "image/png"
+        "image/svg+xml"
+        "image/tiff"
+        "image/webp"
+      ]
+      // openWith "mpv.desktop" [
+        "audio/aac"
+        "audio/flac"
+        "audio/mp4"
+        "audio/mpeg"
+        "audio/ogg"
+        "audio/opus"
+        "audio/wav"
+        "video/mp4"
+        "video/quicktime"
+        "video/webm"
+        "video/x-matroska"
+        "video/x-msvideo"
+      ]
+      // openWith "firefox.desktop" [
+        "text/html"
+        "x-scheme-handler/http"
+        "x-scheme-handler/https"
+      ]
+      // openWith "bitwarden.desktop" [ "x-scheme-handler/bitwarden" ];
   };
 
   wayland.windowManager.hyprland = {
@@ -166,6 +207,10 @@ in
     # Hyprland sizes windows; a remembered maximized state reopens kitty over the tiling layout.
     kitty.settings.remember_window_size = "no";
 
+    mpv.enable = true;
+    yazi.enable = true;
+    zathura.enable = true;
+
     waybar = {
       enable = true;
       systemd.enable = true;
@@ -191,6 +236,9 @@ in
     };
     mako.enable = true;
     hyprpolkitagent.enable = true;
+    cliphist.enable = true;
+    # Mounts USB drives on plug-in, since Yazi never mounts and Thunar only on click.
+    udiskie.enable = true;
     hyprpaper = {
       enable = true;
       settings.wallpaper = [
