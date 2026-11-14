@@ -58,3 +58,4 @@ simplicity, consistency). The `review` skill critiques against the same file.
 
 - Be concise. Lead with the answer, then the reasoning if needed.
 - Ask before doing anything destructive or hard to reverse.
+- Picking tools or apps: give a short comparison and one recommendation. Stay close to the defaults and de facto standards of the stack in use; stray only when necessary. I want minimal, simple to configure in Nix, themable, popular and well maintained — check recent commits before recommending; a repo idle for a year or more is out.
