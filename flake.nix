@@ -25,6 +25,11 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v1.2.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -36,6 +41,7 @@
       git-hooks,
       sops-nix,
       claude-desktop,
+      lanzaboote,
     }:
     let
       system = "x86_64-linux";
@@ -101,7 +107,10 @@
 
       nixosConfigurations = {
         vm = mkHost [ ./hosts/vm/configuration.nix ];
-        francisPC = mkHost [ ./hosts/francisPC/configuration.nix ];
+        francisPC = mkHost [
+          ./hosts/francisPC/configuration.nix
+          lanzaboote.nixosModules.lanzaboote
+        ];
       };
 
       checks.${system} = {
