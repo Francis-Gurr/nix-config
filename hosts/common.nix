@@ -14,6 +14,8 @@
   ];
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
+  # Keep kernel errors off the tty, where they overwrite tuigreet's fields; they stay in the journal.
+  boot.consoleLogLevel = 3;
 
   time.timeZone = "Europe/Berlin";
   i18n.defaultLocale = "en_GB.UTF-8";
