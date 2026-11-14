@@ -52,7 +52,11 @@
     ssh.knownHosts."github.com".publicKey =
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl";
     zsh.enable = true;
-    hyprland.enable = true;
+    hyprland = {
+      enable = true;
+      # Ties the session's units to the compositor, so logging out stops them instead of leaving them to crash-loop.
+      withUWSM = true;
+    };
     # GUI fallback to Yazi, for dragging files into apps and Firefox's "Show in folder".
     thunar.enable = true;
     gamemode.enable = true;
@@ -87,7 +91,7 @@
     greetd = {
       enable = true;
       useTextGreeter = true;
-      settings.default_session.command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd start-hyprland";
+      settings.default_session.command = "${pkgs.tuigreet}/bin/tuigreet --time --cmd 'uwsm start hyprland-uwsm.desktop'";
     };
   };
 

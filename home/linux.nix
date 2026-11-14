@@ -153,6 +153,8 @@ in
     # The NixOS module installs Hyprland and its portal.
     package = null;
     portalPackage = null;
+    # UWSM starts graphical-session.target and imports the environment; this would duplicate it.
+    systemd.enable = false;
     settings = {
       # Updates arrive through the flake, so the post-update changelog popup is noise.
       config.ecosystem.no_update_news = true;
@@ -169,7 +171,7 @@ in
         (bind "SUPER + D" "hl.dsp.exec_cmd(\"hyprlauncher\")")
 
         (bind "SUPER + C" "hl.dsp.window.close()")
-        (bind "SUPER + M" "hl.dsp.exit()")
+        (bind "SUPER + M" "hl.dsp.exec_cmd(\"uwsm stop\")")
         (bind "SUPER + V" "hl.dsp.window.float({ action = \"toggle\" })")
         (bind "SUPER + P" "hl.dsp.window.pseudo()")
         (bind "SUPER + J" "hl.dsp.layout(\"togglesplit\")")
