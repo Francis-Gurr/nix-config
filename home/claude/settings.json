@@ -2,6 +2,7 @@
   "theme": "auto",
   "effortLevel": "high",
   "model": "opus",
+  "autoMemoryEnabled": false,
   "hooks": {
     "PostToolUse": [
       {
@@ -10,17 +11,6 @@
           {
             "type": "command",
             "command": "[ -d \"$HOME/notes/personal\" ] || exit 0; printf \"%s\\n\" \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PostToolUse\\\",\\\"additionalContext\\\":\\\"The plan was just approved. Offer to save it to the Obsidian vault: apply the obsidian-project sizing rule first (trivial work warrants no note), then suggest /to-workstream and /to-tasks, or a single task note. A plan never becomes a separate plan note.\\\"}}\""
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "f=$(jq -r \".tool_input.file_path // \\\"\\\"\"); case \"$f\" in */memory/*) [ \"${f##*/}\" = \"MEMORY.md\" ] || printf \"%s\" '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"About to write auto-memory. Decide where this belongs before writing. Anything that should hold on every machine - working preferences, conventions, workflow rules - belongs in ~/dev/nix-config/home/agent (deployed to ~/.config/agent by Home Manager): AGENTS.md for general preferences, CODING_STANDARDS.md for code conventions, an existing skill when it qualifies that skill behaviour, or a new skill for a distinct workflow. Auto-memory is machine-local and will not reach another workstation. Keep it here only when it is specific to this project on this machine. State which you chose.\"}}';; esac"
           }
         ]
       }
