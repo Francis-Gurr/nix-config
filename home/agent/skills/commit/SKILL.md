@@ -1,16 +1,12 @@
 ---
 name: commit
-description: Use when creating a git commit or writing a commit message — the message convention (Conventional Commits + a leading gitmoji, subject line only), how to validate against commitlint, and the commit workflow. Pauses for review before committing, then commits and pushes together.
+description: Use when creating a git commit or writing a commit message.
 ---
-
-Write commits as Conventional Commits with a leading gitmoji, subject line only, validated
-against commitlint before committing.
 
 ## Convention
 
-[Conventional Commits](https://www.conventionalcommits.org) with a single subject line
-only (no body, no footer) and a leading [gitmoji](https://gitmoji.dev) that matches the
-type:
+[Conventional Commits](https://www.conventionalcommits.org), subject line only (no body, no footer),
+with a leading [gitmoji](https://gitmoji.dev) matching the type:
 
 ```
 <emoji> <type>(<optional scope>): <subject>
@@ -27,28 +23,22 @@ type:
 
 ### commitlint is the source of truth
 
-Repos with a commitlint config enforce this with a commit-msg hook. Don't
-reproduce the rules — read them from the resolved config:
+Repos with a commitlint config enforce this with a commit-msg hook. Read the rules from the resolved
+config:
 
 - Rules + the gitmoji for each type: `npx commitlint --print-config json`
   (emoji map under `prompt.questions.type.enum.<type>.emoji`, types under `type-enum`)
 - Validate before committing: `printf '%s' "<message>" | npx commitlint` (exit 0 = valid)
-- If a commit is rejected, fix only the rule named in brackets (the `[type-emoji]` error
-  names the exact emoji), then retry. Never `git commit --no-verify`.
+- If a commit is rejected, fix only the rule named in brackets (the `[type-emoji]` error names the
+  exact emoji), then retry. The hook always runs: `--no-verify` is off-limits.
 
-If a repo has no commitlint, the canonical mapping lives in
-`~/dev/nix-config/commitlint.config.mjs`.
+If a repo has no commitlint, the canonical mapping lives in `~/dev/nix-config/commitlint.config.mjs`.
 
 ## Creating a commit
 
-When asked to commit:
-
-1. Run `git status --short` and `git diff HEAD` to see the current state.
-2. If nothing is staged, stage the relevant changes yourself.
-3. If the changes are unrelated, stop and propose splitting them into separate commits
-   instead of committing them together.
-4. Write the message per the convention above and validate it against commitlint.
-5. **Stop and show me the staged files and the proposed message.** Committing is the point
-   past which review costs a rewrite, so I review before it, not after.
-6. Once I approve, commit and push in one go — no second confirmation for the push. Never
-   `git push --force`; `--force-with-lease` needs my explicit approval each time.
+1. If nothing is staged, stage the relevant changes yourself.
+2. If the changes are unrelated, stop and propose splitting them into separate commits.
+3. Write the message and validate it against commitlint.
+4. **Stop and show me the staged files and the proposed message.** Committing is the point past
+   which review costs a rewrite. Skip this pause in my Obsidian vault (`~/notes/personal`).
+5. Once I approve, commit and push in one go, with no second confirmation for the push.

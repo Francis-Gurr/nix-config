@@ -1,32 +1,23 @@
 # Code style
 
-Conventions for both writing and reviewing code. Tool-agnostic; referenced by `AGENTS.md`
-(when generating code) and the `review` skill (when critiquing it).
-
-## Naming
-
-- Identifiers communicate their purpose — clear over clever, but not unwieldy.
-
 ## Comments
 
-- Explain *why*, not *what* — the code already says what.
-- Don't add comments that just restate the code.
-- Keep them to one short line where possible, not multi-line essays.
+- Comments explain *why*, in one short line.
 
 ## Documentation
 
-- When behaviour changes, update the docs that describe it (README, help text) so they don't drift.
+- When behaviour changes, update the docs that describe it (README, help text) in the same change.
 
 ## Simplicity
 
-- Prefer the minimal solution; avoid over-engineering for speculative future needs.
+- Write the minimal solution for today's need.
 - Reuse existing logic instead of duplicating it.
-- When a non-essential addition errors, prefer removing it over piling on workarounds.
+- When a non-essential addition errors, remove it rather than piling on workarounds.
 
 ## Error handling
 
-- Surface errors — don't swallow them in catch-all handlers or silent fallbacks; fail where a caller can still react.
+- Let errors surface where a caller can still react; catch only what you handle.
 
 ## Consistency
 
-- Match the style, naming, and idioms of the surrounding file over any global default.
+- Match the style, naming and idioms of the surrounding file over any global default.
