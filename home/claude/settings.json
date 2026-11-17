@@ -10,7 +10,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -d \"$HOME/notes/personal\" ] || exit 0; printf \"%s\\n\" \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PostToolUse\\\",\\\"additionalContext\\\":\\\"The plan was just approved. Offer to save it to the Obsidian vault: apply the obsidian-project sizing rule first (trivial work warrants no note), then suggest /to-workstream and /to-tasks, or a single task note. A plan never becomes a separate plan note.\\\"}}\""
+            "command": "[ -d \"$HOME/notes/personal\" ] || exit 0; printf \"%s\\n\" \"{\\\"hookSpecificOutput\\\":{\\\"hookEventName\\\":\\\"PostToolUse\\\",\\\"additionalContext\\\":\\\"The plan was just approved. Unless the work is trivial, offer /to-workstream to save it to the Obsidian vault; it sizes the plan into a workstream or a single task.\\\"}}\""
           }
         ]
       }
