@@ -3,7 +3,7 @@ name: commit
 description: Commit message phrasing. Use when writing a commit message or creating a commit.
 ---
 
-Format is [Conventional Commits](https://www.conventionalcommits.org) with a leading [gitmoji](https://gitmoji.dev), subject line only:
+Format is [Conventional Commits](https://www.conventionalcommits.org) with a leading [gitmoji](https://gitmoji.dev), subject line only: no body and no trailers, `Co-Authored-By` included.
 
 ```
 ✨ feat(auth): add password reset flow

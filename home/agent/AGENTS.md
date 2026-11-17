@@ -8,7 +8,7 @@ These docs and skills are sourced from `~/dev/nix-config/home/agent/` and deploy
 - Never commit or push in my Obsidian vaults: `git-sync` commits and pushes every change itself.
 - Keep history linear: rebase rather than merge.
 - Push with `--force-with-lease` only when I ask; plain `--force` never.
-- In the Claude desktop app, SSH push fails with "Bad owner or permissions on ~/.ssh/config": the app sees the Nix store as owned by `nobody`. Commit, then ask me to push from my terminal.
+- In the Claude desktop app, plain `git push` fails on the store-owned `~/.ssh/config`. Push with `GIT_SSH_COMMAND='ssh -F none -o GlobalKnownHostsFile=/.host-etc/ssh/ssh_known_hosts' git push`.
 
 ## Work
 
