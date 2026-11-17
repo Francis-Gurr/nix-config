@@ -40,7 +40,7 @@ Leave file paths and code snippets out unless a step cannot be stated without on
 No plan becomes `todo` without this.
 
 1. Check every note against the `obsidian-notes` conventions yourself.
-2. Start a read-only `Plan` subagent with a fresh context window, giving it every note in the plan and the repo it targets. It checks the plan **against reality**: do the named files, functions, paths and commands exist; are the steps executable in the order given; do any steps contradict each other; what does it assume without saying; would each done-when line catch a failure, or is it look-and-see?
+2. Start a read-only `Plan` subagent with a fresh context window, giving it every note in the plan and the repo it targets. It checks the plan **against reality**: do the named files, functions and paths exist; does every named command run here (`command -v`, or its `--help` for a subcommand or flag); are the steps executable in the order given; do any steps contradict each other; what does it assume without saying; would each done-when line catch a failure, or is it look-and-see?
 3. Apply the findings, and record them under `### Review` in the workstream's `## Notes`, each with what was done about it, including those deliberately not acted on and why. Keep to findings that changed something or that someone would hit again.
 4. Report to me. Set the workstream and its tasks to `todo` once every finding that changes a step, its order or its verification is resolved.
 
