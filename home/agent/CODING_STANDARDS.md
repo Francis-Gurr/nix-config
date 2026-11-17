@@ -1,4 +1,4 @@
-# Code style
+# Coding standards
 
 ## Comments
 

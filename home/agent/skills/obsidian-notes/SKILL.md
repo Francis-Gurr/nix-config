@@ -77,7 +77,7 @@ Keep a sometimes-unset property **blank**, so the note carries the same keys as 
 
 - Start at `##`: Obsidian renders the filename as the title.
 - One line per paragraph, no hard wrapping.
-- Sentence case with spaces (`Setup rust lsp.md`). A project folder matches the repo name in the remote: `dotfiles`, not `chezmoi`.
+- Sentence case with spaces (`Setup rust lsp.md`). A project folder matches the repo name in the remote, not the name of the checkout directory.
 - `[[wikilinks]]` inside the vault, Markdown links for external URLs.
 - Checkboxes belong to a task's `## Steps`. Only `Todos.md` holds todos.
 - **Lists are derived.** A ` ```base ` block filtered on `workstream == this` cannot drift, because the table is the frontmatter. Each level lists only what it owns: an area its projects, a workstream its tasks, a project its workstreams plus any task with no workstream (`workstream.isEmpty()`). Before editing a base block, read [`REFERENCE.md`](REFERENCE.md#base-views).
