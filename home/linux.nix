@@ -25,8 +25,8 @@ let
   workspaceBinds = lib.concatMap (
     workspace:
     let
-      # Workspace 10 sits on the 0 key.
-      key = toString (lib.mod workspace 10);
+      # Hyprland rejects workspace 0, so key 0 opens workspace 1.
+      key = toString (workspace - 1);
       number = toString workspace;
     in
     [
@@ -163,7 +163,13 @@ in
     systemd.enable = false;
     settings = {
       # Updates arrive through the flake, so the post-update changelog popup is noise.
-      config.ecosystem.no_update_news = true;
+      config = {
+        ecosystem.no_update_news = true;
+        general = {
+          gaps_in = 0;
+          gaps_out = 0;
+        };
+      };
       monitor = [
         {
           output = "";
@@ -176,7 +182,7 @@ in
         (bind "SUPER + RETURN" "hl.dsp.exec_cmd(\"kitty\")")
         (bind "SUPER + D" "hl.dsp.exec_cmd(\"hyprlauncher\")")
 
-        (bind "SUPER + C" "hl.dsp.window.close()")
+        (bind "SUPER + Q" "hl.dsp.window.close()")
         (bind "SUPER + M" "hl.dsp.exec_cmd(\"uwsm stop\")")
         (bind "SUPER + V" "hl.dsp.window.float({ action = \"toggle\" })")
         (bind "SUPER + P" "hl.dsp.window.pseudo()")
@@ -225,6 +231,11 @@ in
       # Waybar's built-in config only uses Sway modules.
       settings.mainBar = {
         modules-left = [ "hyprland/workspaces" ];
+        # Label workspaces from 0 to match their keys.
+        "hyprland/workspaces" = {
+          format = "{icon}";
+          format-icons = lib.genAttrs (map toString (lib.range 1 10)) (id: toString (lib.toInt id - 1));
+        };
         modules-center = [ "hyprland/window" ];
         modules-right = [
           "pulseaudio"
