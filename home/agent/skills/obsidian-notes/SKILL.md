@@ -1,6 +1,6 @@
 ---
 name: obsidian-notes
-description: Conventions for my Obsidian vaults (personal and shared). Use when reading or writing any vault note: folder structure, frontmatter, note shape, naming, archiving and file operations. Read by obsidian-project, to-workstream, to-tasks, implement, research and retro.
+description: Conventions for my Obsidian vaults (personal and shared). Use when reading or writing any vault note: folder structure, frontmatter, note shape, naming, archiving and file operations. Read by obsidian-project, to-workstream, to-tasks, review-plan, implement, research and retro.
 ---
 
 Write notes with the `writing` skill.
@@ -76,6 +76,8 @@ Keep a sometimes-unset property **blank**, so the note carries the same keys as 
 ## Writing notes
 
 - Start at `##`: Obsidian renders the filename as the title.
+- Templates carry the shape as `%%` prompts: replace each with what it asks for, so a finished note has none.
+- Plans leave out file paths and code snippets unless a step cannot be stated without one: they go stale. A prototype's snippet that states a decision more precisely than prose (a state machine, a schema, a type) goes under that decision, trimmed to the decision-rich part.
 - One line per paragraph, no hard wrapping.
 - Sentence case with spaces (`Setup rust lsp.md`). A project folder matches the repo name in the remote, not the name of the checkout directory.
 - `[[wikilinks]]` inside the vault, Markdown links for external URLs.

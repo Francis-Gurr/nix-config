@@ -13,37 +13,27 @@ Read the workstream note in full. Explore the repo if you have not already, usin
 ## 2. Draft vertical slices
 
 - Each task cuts a narrow but complete path through every layer it touches, with tests: vertical, never one layer at a time.
-- A finished task is demoable or verifiable on its own.
+- A finished task is demoable or verifiable on its own, at one of the workstream's seams.
 - Each task fits one fresh context window.
 - Prefactoring comes first.
+- Every behaviour in the workstream is delivered by at least one task, and every task serves at least one behaviour.
 
-**Wide refactors are the exception.** A single mechanical change whose blast radius spans the codebase (renaming a shared symbol) goes as **expand, migrate, contract**: add the new form beside the old; migrate callers in batches, one task each; delete the old form in a final task.
+**Wide refactors are the exception.** A single mechanical change whose blast radius spans the codebase (renaming a shared symbol) goes as **expand, migrate, contract**: add the new form beside the old; migrate callers in batches sized by blast radius (per package or directory), one task each; delete the old form in a final task. When batches cannot stay green alone, they share an integration branch and a final integrate-and-verify task is the first point that must pass.
 
 Sequence lives in `order`. A task blocked by others gets a higher `order` than all of them; tasks that can run in parallel share a value.
 
 ## 3. Check with me
 
-Show the breakdown as a numbered list: title, `order`, and the end-to-end behaviour each delivers. Ask whether the granularity is right, whether each `order` reflects a real dependency, and whether anything should merge or split. Iterate until I approve.
+Show the breakdown as a numbered list: title, `order`, the behaviours it delivers, and the end-to-end behaviour in a line. Ask whether the granularity is right, whether each `order` reflects a real dependency, and whether anything should merge or split. Iterate until I approve.
 
 ## 4. Write the tasks
 
-One note per task from `Templates/Task.md` in `Projects/<project>/`, with `project`, `workstream`, `order` and `status: draft`:
+One note per task from `Templates/Task.md` in `Projects/<project>/`, with `project`, `workstream` and `order`, keeping `status: draft`.
 
-- `## Summary`: the behaviour it delivers, then a **Done when:** line that is checkable, ideally a command whose output decides it.
-- `## Steps`: the work as checkboxes, in order.
-- `## Notes`: empty, or decisions specific to this task.
+## 5. Review
 
-Leave file paths and code snippets out unless a step cannot be stated without one.
+Call the Skill tool with "review-plan" on the workstream.
 
-## 5. Review gate
-
-No plan becomes `todo` without this.
-
-1. Check every note against the `obsidian-notes` conventions yourself.
-2. Start a read-only `Plan` subagent with a fresh context window, giving it every note in the plan and the repo it targets. It checks the plan **against reality**: do the named files, functions and paths exist; does every named command run here (`command -v`, or its `--help` for a subcommand or flag); are the steps executable in the order given; do any steps contradict each other; what does it assume without saying; would each done-when line catch a failure, or is it look-and-see?
-3. Apply the findings, and record them under `### Review` in the workstream's `## Notes`, each with what was done about it, including those deliberately not acted on and why. Keep to findings that changed something or that someone would hit again.
-4. Report to me. Set the workstream and its tasks to `todo` once every finding that changes a step, its order or its verification is resolved.
-
-Done when every task note exists, the review is recorded, and the statuses are `todo`.
+Done when every task note exists and `review-plan` has set the plan to `todo`.
 
 Next step: `/implement` on the first task by `order`.

@@ -8,7 +8,7 @@ Implement one vault task. Resolve it with the `obsidian-project` skill: the task
 
 A task is **done** only when it is reviewed, fixed, committed and pushed. Work these stages in order; each ends where the next begins.
 
-1. **Build.** Work the `## Steps` in order, calling the Skill tool with "tdd" at pre-agreed seams. Run typechecking and single test files regularly, and the full suite once at the end.
+1. **Build.** Work the `## Steps` in order, calling the Skill tool with "tdd" at the seams named by the task's **Done when** and its workstream's **Testing**. Run typechecking and single test files regularly, and the full suite once at the end.
 2. **Agent review.** Call the Skill tool with "code-review". Fix every hard violation and every Spec finding; settle each judgement call by fixing it or noting why not. Done when the fixes are in and the full suite passes.
 3. **Human review and QA.** Hand the work to the user: what changed, how to test it, and which review findings you left and why. Wait for their findings.
 4. **Address findings.** Fix what the user raised, rerun the suite, and return to stage 3 until the user is satisfied.

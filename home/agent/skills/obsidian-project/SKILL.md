@@ -35,7 +35,7 @@ A workstream needs at least three tasks. Promote between tiers when asked, or wh
 
 **Workstream**: only when enough tasks accumulate to need shared context. Tasks attach directly to a project otherwise.
 
-**Task**: from `Templates/Task.md`, carrying `project`, `order` and any `workstream`.
+**Task**: from `Templates/Task.md`, carrying `project`, `order` and any `workstream`. Templates start at `draft`; a hand-made task goes `todo` once its steps are written, a planned one once `review-plan` passes it.
 
 ## Updating status
 
