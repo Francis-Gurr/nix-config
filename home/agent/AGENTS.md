@@ -5,7 +5,7 @@ These docs and skills are sourced from `~/dev/nix-config/home/agent/` and deploy
 ## Git
 
 - Commit only when I ask. Stage the changes and pause so I can review them; on my approval, commit and push together without asking again.
-- My Obsidian vaults are notes, not code: commit and push vault edits straight away.
+- Never commit or push in my Obsidian vaults: `git-sync` commits and pushes every change itself.
 - Keep history linear: rebase rather than merge.
 - Push with `--force-with-lease` only when I ask; plain `--force` never.
 
