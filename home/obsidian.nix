@@ -1,3 +1,4 @@
+{ lib, ... }:
 {
   programs.obsidian = {
     enable = true;
@@ -7,8 +8,9 @@
     # unset: the module only writes a file when its option is non-null, and
     # community-plugins.json must stay Obsidian's, since LiveSync's data.json
     # holds the CouchDB credentials and cannot live in a public repo.
-    vaults."personal" = {
-      target = "notes/personal";
+    # Both vaults share one setup so the agent skills work the same in either.
+    vaults = lib.genAttrs [ "personal" "shared" ] (name: {
+      target = "notes/${name}";
 
       settings = {
         # app.json is written whole, so anything omitted is dropped rather than
@@ -49,6 +51,6 @@
           "word-count"
         ];
       };
-    };
+    });
   };
 }

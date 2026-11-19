@@ -14,7 +14,7 @@ Two vaults share one structure. Every CLI call names its vault.
 | personal | `~/notes/personal` | `vault="personal"` | `obsidian://open?vault=personal&file=Areas%2FDevelopment` |
 | shared | `~/notes/shared` | `vault="shared"` | `obsidian://open?vault=shared&file=Areas%2FDevelopment` |
 
-**Choosing a vault:** use the vault that already holds the project. New projects go to personal unless I say shared. When searching, skip a vault whose directory is absent (shared is not set up everywhere). Stop and say so only when the vault you need to write to is absent: a note written to a missing vault never syncs.
+**Choosing a vault:** use the vault that already holds the project. New projects go to personal unless I say shared. A vault is present only if its directory holds `.git`: Home Manager writes `.obsidian/` on every machine, but only NixOS syncs. When searching, skip an absent vault. Stop and say so only when the vault you need to write to is absent: a note written there never syncs.
 
 ## Structure
 

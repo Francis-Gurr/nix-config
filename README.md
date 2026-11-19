@@ -187,7 +187,7 @@ The login password is a hash, not the password itself. Generate one with `nix sh
 
 Each machine has its own SSH key in `hosts/<machine>/secrets.yaml`, placed at `~/.ssh/id_ed25519` and authorised once on GitHub and the homeserver (`user` and `git`). A reinstall decrypts the same key, so nothing needs authorising again. To revoke a machine, remove its key from GitHub and the homeserver's `authorized_keys`.
 
-On NixOS the Obsidian vault syncs to `homeserver-git:/zfs-pool/git/francis-notes.git` through `services.git-sync` (`home/vault.nix`): it sets the vault up on first login, commits and pushes on every change, and pulls every 500 seconds when idle. Failures after setup are silent, so check `journalctl --user -u git-sync-personal` if notes stop arriving.
+On NixOS the Obsidian vaults sync through `services.git-sync` (`home/vault.nix`): `~/notes/personal` to `homeserver-git:/zfs-pool/git/francis-notes.git` and `~/notes/shared` to `shared-notes.git` beside it. Each is set up on first login, commits and pushes on every change, and pulls every 500 seconds when idle. Failures after setup are silent, so check `journalctl --user -u git-sync-personal` (or `-shared`) if notes stop arriving.
 
 Repos listed in `home/repos.nix` are cloned into `~/dev` on login, if missing, by the `clone-repos` user service. Existing checkouts are never touched; `mr status` shows uncommitted work across all of them.
 
