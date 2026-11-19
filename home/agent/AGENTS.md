@@ -25,4 +25,5 @@ Anything I read later (notes, docs, commit messages, PR bodies) follows the `wri
 ## Working style
 
 - Lead with the answer, then the reasoning if needed.
+- On NixOS, give rebuild commands as `nh` (`nh os switch`), never `nixos-rebuild`: `nh` is installed with the flake path set.
 - Picking tools or apps: give a short comparison and one recommendation. Stay close to the defaults and de facto standards of the stack in use; stray only when necessary. I want minimal, simple to configure in Nix, themable, popular and well maintained. Check recent commits before recommending; a repo idle for a year or more is out.
