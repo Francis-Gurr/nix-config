@@ -254,6 +254,24 @@ in
       settings.finders.desktop_launch_prefix = "systemd-run --user --scope --quiet --";
     };
     mako.enable = true;
+    hypridle = {
+      enable = true;
+      settings = {
+        # Monitors can stay off across suspend; wake them on resume.
+        general.after_sleep_cmd = "hyprctl dispatch 'hl.dsp.dpms({ action = \"on\" })'";
+        listener = [
+          {
+            timeout = 300;
+            on-timeout = "hyprctl dispatch 'hl.dsp.dpms({ action = \"off\" })'";
+            on-resume = "hyprctl dispatch 'hl.dsp.dpms({ action = \"on\" })'";
+          }
+          {
+            timeout = 900;
+            on-timeout = "systemctl suspend";
+          }
+        ];
+      };
+    };
     hyprpolkitagent.enable = true;
     cliphist.enable = true;
     # Mounts USB drives on plug-in, since Yazi never mounts and Thunar only on click.
