@@ -169,6 +169,11 @@ in
           gaps_in = 0;
           gaps_out = 0;
         };
+        # Show a plain dark background, not Hyprland's own wallpaper, until hyprpaper draws.
+        misc = {
+          disable_hyprland_logo = true;
+          force_default_wallpaper = 0;
+        };
       };
       monitor = [
         {
