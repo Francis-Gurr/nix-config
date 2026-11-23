@@ -1,4 +1,9 @@
-{ lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   lua = lib.generators.mkLuaInline;
   openWith = app: mimeTypes: lib.genAttrs mimeTypes (_: app);
@@ -59,7 +64,12 @@ in
 
   systemd.user = {
     # Electron only uses the keyring on desktops it recognises, not Hyprland; claude-desktop's launcher reads this.
-    sessionVariables.CLAUDE_PASSWORD_STORE = "gnome-libsecret";
+    sessionVariables = {
+      CLAUDE_PASSWORD_STORE = "gnome-libsecret";
+      # uwsm starts Hyprland from this environment, which home.sessionVariables never reaches.
+      XCURSOR_THEME = config.home.pointerCursor.name;
+      XCURSOR_SIZE = config.home.pointerCursor.size;
+    };
 
     # PAM starts and unlocks the keyring at login, but outside GNOME nothing tells it to serve
     # secrets, so D-Bus starts a second, locked daemon instead.
@@ -110,6 +120,14 @@ in
   gtk = {
     enable = true;
     colorScheme = "dark";
+  };
+
+  # Tokyo Night variant to match kitty and VS Code.
+  home.pointerCursor = {
+    package = pkgs.simp1e-cursors;
+    name = "Simp1e-Tokyo-Night";
+    size = 24;
+    gtk.enable = true;
   };
 
   # Apps such as grimblast and Firefox save to these; without them they fall back to ~.
