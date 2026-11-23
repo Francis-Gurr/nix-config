@@ -141,7 +141,7 @@ in
   # Tokyo Night variant to match kitty and VS Code.
   home.pointerCursor = {
     package = pkgs.simp1e-cursors;
-    name = "Simp1e-Tokyo-Night";
+    name = "Simp1e-Tokyo-Night-Light";
     size = 24;
     gtk.enable = true;
   };
