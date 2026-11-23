@@ -71,48 +71,64 @@ in
       XCURSOR_SIZE = config.home.pointerCursor.size;
     };
 
-    # PAM starts and unlocks the keyring at login, but outside GNOME nothing tells it to serve
-    # secrets, so D-Bus starts a second, locked daemon instead.
-    services.gnome-keyring-start = {
-      Unit = {
-        Description = "Hand the PAM-unlocked keyring to the session";
-        After = [ "graphical-session-pre.target" ];
-        PartOf = [ "graphical-session.target" ];
+    services = {
+      # PAM starts and unlocks the keyring at login, but outside GNOME nothing tells it to serve
+      # secrets, so D-Bus starts a second, locked daemon instead.
+      gnome-keyring-start = {
+        Unit = {
+          Description = "Hand the PAM-unlocked keyring to the session";
+          After = [ "graphical-session-pre.target" ];
+          PartOf = [ "graphical-session.target" ];
+        };
+        Service = {
+          Type = "oneshot";
+          ExecStart = "${pkgs.gnome-keyring}/bin/gnome-keyring-daemon --start --components=secrets";
+        };
+        Install.WantedBy = [ "graphical-session.target" ];
       };
-      Service = {
-        Type = "oneshot";
-        ExecStart = "${pkgs.gnome-keyring}/bin/gnome-keyring-daemon --start --components=secrets";
-      };
-      Install.WantedBy = [ "graphical-session.target" ];
-    };
 
-    # The tty hides boot errors behind the greeter, so raise failed units where they will be seen.
-    services.notify-failed-units = {
-      Unit = {
-        Description = "Notify about units that failed during boot";
-        After = [ "graphical-session.target" ];
-        PartOf = [ "graphical-session.target" ];
+      # The user manager outlives logout, so clear units that died with the last compositor.
+      reset-failed-units = {
+        Unit = {
+          Description = "Clear units that failed when the last session ended";
+          Before = [ "graphical-session-pre.target" ];
+          PartOf = [ "graphical-session-pre.target" ];
+        };
+        Service = {
+          Type = "oneshot";
+          ExecStart = "${pkgs.systemd}/bin/systemctl --user reset-failed";
+        };
+        Install.WantedBy = [ "graphical-session-pre.target" ];
       };
-      Service = {
-        Type = "oneshot";
-        ExecStart = lib.getExe (
-          pkgs.writeShellApplication {
-            name = "notify-failed-units";
-            runtimeInputs = [ pkgs.libnotify ];
-            text = ''
-              failed=$({
-                systemctl --failed --plain --no-legend
-                systemctl --user --failed --plain --no-legend
-              } | awk '{ print $1 }')
-              if [ -n "$failed" ]; then
-                notify-send --urgency=critical --app-name=systemd "Failed units" \
-                  "$failed"$'\n\nInspect with systemctl status <unit>.'
-              fi
-            '';
-          }
-        );
+
+      # The tty hides boot errors behind the greeter, so raise failed units where they will be seen.
+      notify-failed-units = {
+        Unit = {
+          Description = "Notify about units that failed during boot";
+          After = [ "graphical-session.target" ];
+          PartOf = [ "graphical-session.target" ];
+        };
+        Service = {
+          Type = "oneshot";
+          ExecStart = lib.getExe (
+            pkgs.writeShellApplication {
+              name = "notify-failed-units";
+              runtimeInputs = [ pkgs.libnotify ];
+              text = ''
+                failed=$({
+                  systemctl --failed --plain --no-legend
+                  systemctl --user --failed --plain --no-legend
+                } | awk '{ print $1 }')
+                if [ -n "$failed" ]; then
+                  notify-send --urgency=critical --app-name=systemd "Failed units" \
+                    "$failed"$'\n\nInspect with systemctl status <unit>.'
+                fi
+              '';
+            }
+          );
+        };
+        Install.WantedBy = [ "graphical-session.target" ];
       };
-      Install.WantedBy = [ "graphical-session.target" ];
     };
   };
 
