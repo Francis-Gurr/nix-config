@@ -48,6 +48,7 @@ in
       brightnessctl
       grimblast
       hyprpicker
+      hyprshutdown
       imv
       libnotify
       pavucontrol
@@ -188,7 +189,8 @@ in
         (bind "SUPER + D" "hl.dsp.exec_cmd(\"hyprlauncher\")")
 
         (bind "SUPER + Q" "hl.dsp.window.close()")
-        (bind "SUPER + M" "hl.dsp.exec_cmd(\"uwsm stop\")")
+        # Closes apps gracefully first; UWSM ends the session once Hyprland exits.
+        (bind "SUPER + M" "hl.dsp.exec_cmd(\"hyprshutdown\")")
         (bind "SUPER + V" "hl.dsp.window.float({ action = \"toggle\" })")
         (bind "SUPER + P" "hl.dsp.window.pseudo()")
         (bind "SUPER + J" "hl.dsp.layout(\"togglesplit\")")
