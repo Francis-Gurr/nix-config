@@ -157,7 +157,7 @@ Edit a file, then rebuild and activate. On NixOS, this applies both `hosts/` and
 sudo nixos-rebuild switch --flake ~/dev/nix-config#francisPC   # or: nh os switch
 ```
 
-To update, run `update` (`hosts/update.nix`). It pulls the repo, then `nh os switch --update --ask` moves the inputs in `flake.lock`, builds, shows the package diff and asks before switching. If you accept, it commits and pushes `flake.lock`. If you decline or the build fails, the old pins stay. Last, it applies any device firmware updates from fwupd; one that needs a reboot installs at the next one. Nothing updates on its own. `nh clean` runs weekly and keeps the last five generations plus anything from the past 30 days. Roll back with `sudo nixos-rebuild switch --rollback`, or hold Space at boot.
+To update, run `update` (`hosts/update.nix`). It pulls the repo, then `nh os switch --update --ask` moves the inputs in `flake.lock`, builds, shows the package diff and asks before switching. If you accept, it commits and pushes `flake.lock`. If you decline or the build fails, the old pins stay. Last, it applies any device firmware updates from fwupd; one that needs a reboot installs at the next one. Nothing updates on its own. The switch applies live. uwsm's session units are kept from restarting (`hosts/common.nix`), so it cannot end the Hyprland session; they pick up changes at the next login. A kernel bump in nh's diff (`linux`) only takes effect after a reboot, so reboot when convenient. `nh clean` runs weekly and keeps the last five generations plus anything from the past 30 days. Roll back with `sudo nixos-rebuild switch --rollback`, or hold Space at boot.
 
 On Fedora, only `home/` applies:
 

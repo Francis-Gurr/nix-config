@@ -120,8 +120,25 @@
 
   fileSystems = import ./homeserver-mounts.nix { inherit config lib; };
 
-  # sops-nix would otherwise create ~/.ssh as root when placing the SSH key.
-  systemd.tmpfiles.rules = [ "d /home/francis/.ssh 0700 francis users -" ];
+  systemd = {
+    # sops-nix would otherwise create ~/.ssh as root when placing the SSH key.
+    tmpfiles.rules = [ "d /home/francis/.ssh 0700 francis users -" ];
+    # A switch restarts changed user units, and restarting uwsm's ends the session; drop once nixpkgs' uwsm module does this.
+    user.services =
+      lib.genAttrs
+        [
+          "wayland-session-bindpid@"
+          "wayland-session-waitenv"
+          "wayland-wm@"
+          "wayland-wm-env@"
+          "wayland-wm-app-daemon"
+        ]
+        (_: {
+          restartIfChanged = false;
+          # Otherwise the drop-in sets a minimal PATH over the one uwsm imports for Hyprland.
+          enableDefaultPath = false;
+        });
+  };
 
   users = {
     mutableUsers = false;
