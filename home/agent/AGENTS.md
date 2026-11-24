@@ -13,6 +13,8 @@ These docs and skills are sourced from `~/dev/nix-config/home/agent/` and deploy
 
 Projects, workstreams and tasks live in my Obsidian vaults (`obsidian-project`). Planned work runs `/grill-me` → `/to-workstream` → `/to-tasks` → `/implement` per task → `/retro`. Plans go in the vault, never in the repo or `~/.claude/plans`.
 
+A brief that names a user-only skill (one the Skill tool can't call): read `~/.config/agent/skills/<name>/SKILL.md` and follow it.
+
 ## Prose
 
 Anything I read later (notes, docs, commit messages, PR bodies) follows the `writing` skill: tight, British English.
