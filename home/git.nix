@@ -55,7 +55,6 @@
         status.submoduleSummary = true;
         submodule.recurse = true;
         transfer.fsckobjects = true;
-        url."git@github.com:".insteadOf = "https://github.com/";
       };
     };
 

@@ -88,9 +88,10 @@
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
-                # The vault syncs only on NixOS; Fedora's standalone config shares home/linux.nix.
+                # The vault and sops secrets exist only on NixOS; Fedora's standalone config shares home/linux.nix.
                 users.francis.imports = [
                   ./home/linux.nix
+                  ./home/github.nix
                   ./home/vault.nix
                 ];
               };

@@ -108,7 +108,8 @@
     secrets = {
       francis-password.neededForUsers = true;
       samba-credentials = { };
-      # Each host sets sopsFile to its own key.
+      # Each host sets sopsFile to its own key and token.
+      gh-token.owner = "francis";
       ssh-key = {
         owner = "francis";
         path = "/home/francis/.ssh/id_ed25519";

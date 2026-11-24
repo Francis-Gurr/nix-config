@@ -8,7 +8,10 @@
   networking.hostName = "francisPC";
 
   # Already authorised on GitHub and the homeserver; the VM rehearsed with it.
-  sops.secrets.ssh-key.sopsFile = ./secrets.yaml;
+  sops.secrets = {
+    ssh-key.sopsFile = ./secrets.yaml;
+    gh-token.sopsFile = ./secrets.yaml;
+  };
 
   boot.loader = {
     # Windows and Fedora are reached through F8, so the menu only lists generations; hold Space for it.
