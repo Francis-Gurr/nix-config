@@ -13,7 +13,7 @@ No plan becomes `todo` without this gate. The plan is the workstream or task I n
 
 ## 2. Check against reality
 
-Start a read-only `Plan` subagent with a fresh context window, giving it every note in the plan and the repo it targets. It checks:
+Start a `general-purpose` subagent with a fresh context window, giving it every note in the plan and the repo it targets. It leaves the repo's working tree untouched and reports each claim as verified or unverified: one checked only against source is unverified. It checks:
 
 - Do the named files, functions and paths exist?
 - Does every named command run here (`command -v`, or its `--help` for a subcommand or flag)?
@@ -21,6 +21,7 @@ Start a read-only `Plan` subagent with a fresh context window, giving it every n
 - Do any steps contradict each other?
 - What does the plan assume without saying?
 - Would each done-when line catch a failure, or is it look-and-see?
+- In a Nix repo: do the plan's snippets build? Apply them in a `git worktree` under a temp dir (`git add` new files, or the flake cannot see them), build every flake output they touch, and run the repo's hooks (nixfmt, statix, deadnix); then remove the worktree.
 
 ## 3. Apply and record
 

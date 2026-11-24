@@ -100,4 +100,4 @@ obsidian vault="<vault>" delete file=<name>
 
 `move` fails with `ENOENT` unless the destination folder exists, so `mkdir -p` it first.
 
-`vault=` is **mandatory**: both vaults can be open at once, and without it a rename can hit the wrong one. If the CLI is unavailable, say what needs renaming and leave it. If it fails with `Cannot find module 'electron'`, or you need to edit `.obsidian/*.json`, read [`REFERENCE.md`](REFERENCE.md).
+`vault=` is **mandatory**: both vaults can be open at once, and without it a rename can hit the wrong one. From a Claude desktop session the CLI cannot reach the running app and hangs; there, or wherever the CLI is unavailable, give me the commands to run in my own terminal. If it fails with `Cannot find module 'electron'`, or you need to edit `.obsidian/*.json`, read [`REFERENCE.md`](REFERENCE.md).
